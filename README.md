@@ -7,11 +7,34 @@
 The Ember CLI Helper is super easy to use.  Just press `clt-alt-o` or search
 for `ember cli helper` in the command palette.
 
+## Commands
+
+### Server
+
+Runs `ember server` in the root folder of the project.
+
+### Test
+
+Runs `ember test` in the root folder of the project
+
+### Exit
+
+Stops a currently running process
+
+### Minimize
+
+Show and hide the output panel, without hiding everything
+
+### Close
+
+Hide the entire panel
+
 ## Todo List
 
 - [ ] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
 - [ ] Use the editor's theme to get colors for success and error in the command output
+- [ ] Give some sort of visual feedback about the running command when the panel is minimized
 
 
 ***

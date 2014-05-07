@@ -2,7 +2,7 @@
 
 [ember-cli]() integration in Atom.
 
-![ember cli helper]()
+![ember cli helper](http://cl.ly/VPPy/Screen%20Shot%202014-05-07%20at%206.10.43%20PM.png)
 
 The Ember CLI Helper is super easy to use.  Just press `clt-alt-o` or search
 for `ember cli helper` in the command palette.

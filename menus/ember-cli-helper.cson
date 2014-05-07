@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable ember-cli-helper': 'ember-cli-helper:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Ember CLI'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'ember-cli-helper:toggle' }
+      ]
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "ember-cli-helper",
+  "main": "./lib/ember-cli-helper",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationEvents": ["ember-cli-helper:toggle"],
+  "repository": "https://github.com/atom/ember-cli-helper",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}

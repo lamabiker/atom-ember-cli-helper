@@ -25,7 +25,7 @@ class EmberCliHelperView extends View
       error = e.code
 
     if ember?
-      # @toggle()
+      @toggle()
     else
       @emberProject = false
       @addLine "This is not an Ember CLI projet!"

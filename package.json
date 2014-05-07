@@ -1,10 +1,22 @@
 {
   "name": "ember-cli-helper",
+  "description": "Ember CLI integration for Atom",
+  "keywords": [
+    "ember",
+    "cli",
+    "task",
+    "runner",
+    "build",
+    "ember cli",
+    "run"
+  ],
+  "author": {
+    "name": "Alex LaFroscia",
+    "url": "http://alexlafroscia.com"
+  },
   "main": "./lib/ember-cli-helper",
   "version": "0.0.0",
-  "description": "A short description of your package",
-  "activationEvents": ["ember-cli-helper:toggle"],
-  "repository": "https://github.com/atom/ember-cli-helper",
+  "repository": "https://github.com/alexlafroscia/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"

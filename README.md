@@ -31,7 +31,7 @@ Hide the entire panel
 
 ## Todo List
 
-- [ ] Open `ember-cli-helper` automatically if the package uses the Ember CLI
+- [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
 - [ ] Use the editor's theme to get colors for success and error in the command output
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized

@@ -15,12 +15,11 @@
     "url": "http://alexlafroscia.com"
   },
   "main": "./lib/ember-cli-helper",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "repository": "https://github.com/alexlafroscia/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

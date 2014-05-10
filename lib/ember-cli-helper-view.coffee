@@ -60,6 +60,7 @@ class EmberCliHelperView extends View
 
 
   runCommand: (message, task) ->
+    @stopProcess()
     @minimize() if @panel.hasClass 'hidden'
     @clearPanel()
     @addLine message

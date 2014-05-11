@@ -1,4 +1,5 @@
 {View, Task, BufferedProcess} = require 'atom'
+GeneratorListView = require './generator-list-view'
 
 module.exports =
 class EmberCliHelperView extends View
@@ -8,6 +9,7 @@ class EmberCliHelperView extends View
       @div class: 'ember-cli-btn-group', =>
         @button outlet: 'server', click: 'startServer', class: 'btn', 'Server'
         @button outlet: 'test', click: 'startTesting', class: 'btn', 'Test'
+        @button outlet: 'generate', click: 'showGeneratorList', class: 'btn', 'Generate'
         @button outlet: 'exit', click: 'stopProcess', class: 'btn', 'Exit'
         @button outlet: 'hide', click: 'toggle', class: 'btn btn-right', 'Close'
         @button outlet: 'mini', click: 'minimize', class: 'btn btn-right', 'Minimize'
@@ -17,6 +19,7 @@ class EmberCliHelperView extends View
   initialize: ->
     # Register Commands
     atom.workspaceView.command "ember-cli-helper:toggle", => @toggle()
+    atom.workspaceView.command "ember-cli-helper:generate-file", => @showGeneratorList()
 
     # Enable or disable the helper
     try
@@ -85,6 +88,27 @@ class EmberCliHelperView extends View
       @process.kill()
       @process = null
       @addLine "Ember CLI Stopped".fontcolor("red")
+
+
+  showGeneratorList: ->
+    generators = new GeneratorListView @
+
+
+  runGenerator: (query)->
+    @minimize() if @panel.hasClass 'hidden'
+    stdout = (out)->
+      @addLine out.fontcolor("orange")
+    exit = (code) ->
+      atom.beep() unless code == 0
+    try
+      @process = new BufferedProcess
+        command: 'ember'
+        args: ['generate', query, "type:object"]
+        options: {cwd: atom.project.getPath()}
+        stdout: stdout.bind @
+        exit: exit.bind @
+    catch e
+      @addLine "Error: #{e}"
 
 
   # Borrowed from grunt-runner by @nickclaw

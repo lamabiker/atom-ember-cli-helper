@@ -9,3 +9,4 @@
 # https://atom.io/docs/latest/advanced/keymaps
 '.workspace':
   'ctrl-alt-o': 'ember-cli-helper:toggle'
+  'ctrl-alt-g': 'ember-cli-helper:generate-file'

@@ -1,6 +1,6 @@
 # Ember CLI Helper
 
-[ember-cli]() integration in Atom.
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.
 
 ![ember cli helper](http://cl.ly/VTGm/Screen%20Shot%202014-05-10%20at%2010.04.24%20PM.png)
 

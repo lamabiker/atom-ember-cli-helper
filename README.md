@@ -1,5 +1,7 @@
 # Ember CLI Helper
 
+[![Gitter chat](https://badges.gitter.im/alexlafroscia/atom-ember-cli-helper.png)](https://gitter.im/alexlafroscia/atom-ember-cli-helper)
+
 [ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.
 
 ![ember cli helper](http://cl.ly/VTGm/Screen%20Shot%202014-05-10%20at%2010.04.24%20PM.png)
@@ -53,7 +55,7 @@ be prompted to create an object, array, or "neither" -type controller.
 
 ***
 
-**Special thanks** to [@nickClaw](https://github.com/nickclaw/) and his
+**Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)
 package, which was my inspiration for building this and a big help in putting it
 together.

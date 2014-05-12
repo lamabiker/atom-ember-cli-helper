@@ -36,6 +36,12 @@ Once you select a type, you'll be prompted to enter a name, and the output will
 appear in orange in the bottom panel.  If generating a controller, you'll also
 be prompted to create an object, array, or "neither" -type controller.
 
+## Settings
+
+| Setting | Purpose | Default Value |
+| :---    | :---    | :---   |
+| Generate Coffeescript | Have all of the generators make CoffeeScript files instead of Javascript | `false` |
+
 ## Todo List
 
 - [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI

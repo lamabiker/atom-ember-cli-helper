@@ -1,3 +1,6 @@
+## 0.3.0 - Coffeescript Generators
+* Added setting to generate Coffeescript files instead of Javascript
+
 ## 0.2.0 - Added generators
 * Ensure that one process is stopped before starting another
 * Added a way to run the Ember generators through Atom

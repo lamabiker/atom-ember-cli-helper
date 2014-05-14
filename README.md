@@ -52,6 +52,10 @@ be prompted to create an object, array, or "neither" -type controller.
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
 
+## Troubleshooting
+
+Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try openning the project from the command line with the `atom` command see if that fixes the issue.
+
 
 ***
 

@@ -40,12 +40,15 @@ class EmberCliHelperView extends View
 
   # Tear down any state and detach
   destroy: ->
+    @stopProcess()
+    @clearPanel()
+    @panel.removeClass 'hidden'
     @detach()
 
 
   toggle: ->
     if @hasParent()
-      @detach()
+      @destroy()
     else
       atom.workspaceView.prependToBottom this
 

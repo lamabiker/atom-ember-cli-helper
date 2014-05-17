@@ -71,6 +71,10 @@ class EmberCliHelperView extends View
     else
       @stopProcess()
       @lastProcess = task
+      if task == 'server'
+        @server.addClass 'active'
+      if task == 'test'
+        @test.addClass 'active'
       @minimize() if @panel.hasClass 'hidden'
       @clearPanel()
       @addLine message
@@ -79,6 +83,7 @@ class EmberCliHelperView extends View
       exit = (code) ->
         atom.beep() unless code == 0
         @addLine "Ember CLI exited: code #{code}"
+        @removeActiveLabel()
       try
         @process = new BufferedProcess
           command: 'ember'
@@ -91,11 +96,20 @@ class EmberCliHelperView extends View
 
 
   stopProcess: ->
-    console.debug @process
     if @process?
       @process.kill()
+      @removeActiveLabel()
       @process = null
       @addLine "Ember CLI Stopped".fontcolor("red")
+
+
+  removeActiveLabel: ->
+    if @lastProcess == 'server'
+      @server.removeClass 'active'
+    if @lastProcess == 'test'
+      @test.removeClass 'active'
+    @lastProcess = null
+
 
 
   showGeneratorList: ->

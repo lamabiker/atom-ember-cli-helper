@@ -1,3 +1,8 @@
+## 0.4.0 - Active Labels
+* Added an 'active' class to the button for the currently running task
+* Re-open the active panel if that command is run again while it's already
+  running
+
 ## 0.3.0 - Coffeescript Generators
 * Added setting to generate Coffeescript files instead of Javascript
 

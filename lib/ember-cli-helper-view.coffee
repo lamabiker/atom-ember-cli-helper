@@ -66,27 +66,32 @@ class EmberCliHelperView extends View
 
 
   runCommand: (message, task) ->
-    @stopProcess()
-    @minimize() if @panel.hasClass 'hidden'
-    @clearPanel()
-    @addLine message
-    stdout = (out) ->
-      @addLine out
-    exit = (code) ->
-      atom.beep() unless code == 0
-      @addLine "Ember CLI exited: code #{code}"
-    try
-      @process = new BufferedProcess
-        command: 'ember'
-        args: [task]
-        options: {cwd: atom.project.getPath()}
-        stdout: stdout.bind @
-        exit: exit.bind @
-    catch e
-      @addLine "There was an error running the script"
+    if @lastProcess == task
+      @minimize()
+    else
+      @stopProcess()
+      @lastProcess = task
+      @minimize() if @panel.hasClass 'hidden'
+      @clearPanel()
+      @addLine message
+      stdout = (out) ->
+        @addLine out
+      exit = (code) ->
+        atom.beep() unless code == 0
+        @addLine "Ember CLI exited: code #{code}"
+      try
+        @process = new BufferedProcess
+          command: 'ember'
+          args: [task]
+          options: {cwd: atom.project.getPath()}
+          stdout: stdout.bind @
+          exit: exit.bind @
+      catch e
+        @addLine "There was an error running the script"
 
 
   stopProcess: ->
+    console.debug @process
     if @process?
       @process.kill()
       @process = null

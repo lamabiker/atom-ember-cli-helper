@@ -122,7 +122,7 @@ class EmberCliHelperView extends View
       @addLine out.fontcolor("orange")
     exit = (code) ->
       atom.beep() unless code == 0
-    args = ['generate', query, "type:object"]
+    args = [].concat ['generate', query.split(/\s+/), "type:object"]...
     args.push "coffee:true" if atom.config.get 'ember-cli-helper.generateCoffeescript'
     try
       @process = new BufferedProcess

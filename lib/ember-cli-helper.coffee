@@ -3,8 +3,10 @@ EmberCliHelperView = require './ember-cli-helper-view'
 module.exports =
   emberCliHelperView: null
 
-  configDefaults:
-    generateCoffeescript: false
+  config:
+    generateCoffeescript:
+      type: 'boolean'
+      default: false
 
   activate: (state = {}) ->
     @emberCliHelperView = new EmberCliHelperView(state.emberCliHelperViewState)

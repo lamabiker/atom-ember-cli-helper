@@ -21,6 +21,11 @@ class EmberCliHelperView extends View
     atom.workspaceView.command "ember-cli-helper:toggle", => @toggle()
     atom.workspaceView.command "ember-cli-helper:generate-file", => @showGeneratorList()
 
+    # Add the path to the Node executable to the $PATH
+    nodePath = atom.config.get('ember-cli-helper.pathToNodeExecutable')
+    nodePath = nodePath.substring(0, nodePath.length - 4)
+    process.env.PATH += ":#{nodePath}"
+
     # Enable or disable the helper
     try
       ember = require("#{atom.project.getPath()}/package.json").devDependencies["ember-cli"]
@@ -78,26 +83,26 @@ class EmberCliHelperView extends View
       @minimize() if @panel.hasClass 'hidden'
       @clearPanel()
       @addLine message
-      stdout = (out) ->
-        @addLine out
-      exit = (code) ->
+
+      command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
+      args    = [task]
+      options =
+        cwd: atom.project.getPaths()[0] + '/'
+      stdout = (out)=> @addLine out
+      stderr = (out)=> @addLine out.fontcolor('red')
+      exit = (code)=>
         atom.beep() unless code == 0
         @addLine "Ember CLI exited: code #{code}"
         @removeActiveLabel()
       try
-        @process = new BufferedProcess
-          command: 'ember'
-          args: [task]
-          options: {cwd: atom.project.getPath()}
-          stdout: stdout.bind @
-          exit: exit.bind @
+        @process = new BufferedProcess({command, args, options, stdout, stderr, exit})
       catch e
         @addLine "There was an error running the script"
 
 
   stopProcess: ->
-    if @process?
-      @process.kill()
+    @process?.kill()
+    if @process?.killed
       @removeActiveLabel()
       @process = null
       @addLine "Ember CLI Stopped".fontcolor("red")
@@ -111,26 +116,21 @@ class EmberCliHelperView extends View
     @lastProcess = null
 
 
-
   showGeneratorList: ->
     generators = new GeneratorListView @
 
 
   runGenerator: (query)->
     @minimize() if @panel.hasClass 'hidden'
-    stdout = (out)->
-      @addLine out.fontcolor("orange")
-    exit = (code) ->
-      atom.beep() unless code == 0
+    command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
     args = ['generate', query, "type:object"]
     args.push "coffee:true" if atom.config.get 'ember-cli-helper.generateCoffeescript'
+    options =
+      cwd: atom.project.getPaths()[0]
+    stdout = (out)=> @addLine out.fontcolor("orange")
+    exit = (code)-> atom.beep() unless code == 0
     try
-      @process = new BufferedProcess
-        command: 'ember'
-        args: args
-        options: {cwd: atom.project.getPath()}
-        stdout: stdout.bind @
-        exit: exit.bind @
+      @process = new BufferedProcess({command, args, options, stdout, exit})
     catch e
       @addLine "Error: #{e}"
 

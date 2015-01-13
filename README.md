@@ -41,8 +41,10 @@ be prompted to create an object, array, or "neither" -type controller.
 ## Settings
 
 | Setting | Purpose | Default Value |
-| :---    | :---    | :---   |
-| Generate Coffeescript | Have all of the generators make CoffeeScript files instead of Javascript | `false` |
+| :---    | :---    | :---          |
+| Generate Coffeescript     | Have all of the generators make CoffeeScript files instead of Javascript | `false` |
+| Path To Ember Executable  | Point the CLI helper to the Ember executable on your computer | `/usr/local/bin/ember` |
+| Path To `node` Executable | Point the CLI helper to the `node` executable on your computer | `/usr/local/bin/node` |
 
 ## Todo List
 

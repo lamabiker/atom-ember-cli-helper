@@ -7,12 +7,13 @@ class EmberCliHelperView extends View
   @content: ->
     @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
       @div class: 'ember-cli-btn-group', =>
-        @button outlet: 'server', click: 'startServer', class: 'btn', 'Server'
-        @button outlet: 'test', click: 'startTesting', class: 'btn', 'Test'
-        @button outlet: 'generate', click: 'showGeneratorList', class: 'btn', 'Generate'
-        @button outlet: 'exit', click: 'stopProcess', class: 'btn', 'Exit'
-        @button outlet: 'hide', click: 'toggle', class: 'btn btn-right', 'Close'
-        @button outlet: 'mini', click: 'minimize', class: 'btn btn-right', 'Minimize'
+        @div class: 'block', =>
+          @button outlet: 'server',   click: 'startServer',       class: 'btn btn-sm inline-block-tight',           'Server'
+          @button outlet: 'test',     click: 'startTesting',      class: 'btn btn-sm inline-block-tight',           'Test'
+          @button outlet: 'generate', click: 'showGeneratorList', class: 'btn btn-sm inline-block-tight',           'Generate'
+          @button outlet: 'exit',     click: 'stopProcess',       class: 'btn btn-sm inline-block-tight',           'Exit'
+          @button outlet: 'hide',     click: 'toggle',            class: 'btn btn-sm inline-block-tight btn-right', 'Close'
+          @button outlet: 'mini',     click: 'minimize',          class: 'btn btn-sm inline-block-tight btn-right', 'Minimize'
       @div outlet: 'panel', class: 'panel-body padded hidden', =>
         @ul outlet: 'messages', class: 'list-group'
 

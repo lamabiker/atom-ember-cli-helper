@@ -12,9 +12,28 @@
   .btn:focus {
     outline: 0;
   }
+
+
+  // Styles for the buttons that are floated to the right
   .btn-right {
     float: right;
+
+    &.inline-block-tight {
+      margin-left: @component-icon-padding;
+    }
   }
+
+
+  // Add to the btn-sm class
+  .btn-sm {
+    margin-top: @component-icon-padding;
+    margin-bottom: @component-icon-padding;
+
+    &:first-child {
+      margin-left: @component-icon-padding;
+    }
+  }
+
 }
 
 .ember-cli-btn-group:extend(.btn-group) {

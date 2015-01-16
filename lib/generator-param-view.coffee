@@ -3,7 +3,7 @@ GeneratorTypeView = require './generator-type-view'
 
 module.exports = class GeneratorParamView extends SelectListView
 
-  
+
   initialize: (@view, @param)->
     super
     @addClass 'overlay from-top'
@@ -29,6 +29,6 @@ module.exports = class GeneratorParamView extends SelectListView
 
   runCommand: ->
     if @param == 'controller'
-      new GeneratorTypeView @view, "#{@param} #{@getFilterQuery()}"
+      new GeneratorTypeView @view, [@param, @getFilterQuery()]
     else
-      @view.runGenerator "#{@param} #{@getFilterQuery()}"
+      @view.runGenerator [@param, @getFilterQuery()]

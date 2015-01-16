@@ -12,7 +12,8 @@ module.exports = class GeneratorTypeView extends SelectListView
 
 
   confirmed: (item)->
-    @view.runGenerator "#{@param} #{item}"
+    @param.push item
+    @view.runGenerator @param
     @cancel()
 
 
@@ -21,4 +22,4 @@ module.exports = class GeneratorTypeView extends SelectListView
 
 
   getEmptyMessage: ->
-    "Choose which type of #{@param.slit(' ')[0]} you want to create"
+    "Choose which type of #{@param[0]} you want to create"

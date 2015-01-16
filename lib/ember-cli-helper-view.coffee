@@ -124,8 +124,12 @@ class EmberCliHelperView extends View
   runGenerator: (query)->
     @minimize() if @panel.hasClass 'hidden'
     command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
-    args = ['generate', query, "type:object"]
-    args.push "coffee:true" if atom.config.get 'ember-cli-helper.generateCoffeescript'
+
+    # Set up args (generator to run)
+    args = ['generate']
+    args = args.concat query
+    args.push 'coffee:true' if atom.config.get 'ember-cli-helper.generateCoffeescript'
+
     options =
       cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
     stdout = (out)=> @addLine out.fontcolor("orange")

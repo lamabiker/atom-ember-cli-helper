@@ -52,11 +52,11 @@ That might be the case! But first, check if specifying the path to the Ember and
 
 ## Todo List
 
-- [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
-- [ ] Use the editor's theme to get colors for success and error in the command output
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
-- [x] Include a panel for running the file generators
+- [ ] Use the new notification system for generator success/failure
+- [ ] Dynamically create list of files that can be generated, as well as sub-typesA
+- [ ] Totally re-vamped UI
 
 ## Troubleshooting
 

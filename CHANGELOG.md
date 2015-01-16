@@ -1,3 +1,11 @@
+## 0.5.0 - Updated Package APIs
+* Update package to use the "new" package APIs
+* Fix commands that were broken (which were all of them?)
+* Add setting to specify path to the Ember and NPM executables, since Atom no longer automatically sources the path correctly every time
+    * If you're having trouble getting the plugin to work correctly, try specifying the path to these executables
+    * They default to the location on the Mac
+* Update the UI to look... less bad
+
 ## 0.4.0 - Active Labels
 * Added an 'active' class to the button for the currently running task
 * Re-open the active panel if that command is run again while it's already

@@ -8,7 +8,9 @@ class EmberCliHelperView extends View
     @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
       @div class: 'ember-cli-btn-group', =>
         @div class: 'block', =>
-          @button outlet: 'server',   click: 'startServer',       class: 'btn btn-sm inline-block-tight',           'Server'
+          @button outlet: 'server',   click: 'startServer',       class: 'btn btn-sm inline-block-tight', =>
+            @span 'Server '
+            @span outlet: 'serverMark', "\u25CF"
           @button outlet: 'test',     click: 'startTesting',      class: 'btn btn-sm inline-block-tight',           'Test'
           @button outlet: 'generate', click: 'showGeneratorList', class: 'btn btn-sm inline-block-tight',           'Generate'
           @button outlet: 'exit',     click: 'stopProcess',       class: 'btn btn-sm inline-block-tight',           'Exit'
@@ -18,6 +20,7 @@ class EmberCliHelperView extends View
         @ul outlet: 'messages', class: 'list-group'
 
   initialize: ->
+    @lastColor = null
     # Register Commands
     atom.workspaceView.command "ember-cli-helper:toggle", => @toggle()
     atom.workspaceView.command "ember-cli-helper:generate-file", => @showGeneratorList()
@@ -86,7 +89,11 @@ class EmberCliHelperView extends View
       @addLine message
 
       command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
-      args    = [task]
+      args    = [task,"--color"]
+      proxyArg = atom.config.get('ember-cli-helper.proxyUrl')
+      if task == 'server' && proxyArg != ''
+        args.push("--proxy")
+        args.push(proxyArg)
       options =
         cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
       stdout = (out)=> @addLine out
@@ -115,6 +122,9 @@ class EmberCliHelperView extends View
     if @lastProcess == 'test'
       @test.removeClass 'active'
     @lastProcess = null
+  updateServerButton: ->
+    @serverMark.attr 'class', @lastColor
+
 
 
   showGeneratorList: ->
@@ -142,12 +152,36 @@ class EmberCliHelperView extends View
 
   # Borrowed from grunt-runner by @nickclaw
   # https://github.com/nickclaw/atom-grunt-runner
-  addLine: (text, type = "plain") ->
+  addLine: (text) ->
     [panel, messages] = [@panel, @messages]
+    text = text.replace /\ /g, '&nbsp;'
+    text = @colorize text
+    text = @stripColorCodes text
     text = text.trim().replace /[\r\n]+/g, '<br />'
-    stuckToBottom = messages.height() - panel.height() - panel.scrollTop() == 0
-    messages.append "<li class='text-#{type}'>#{text}</li>"
+    stuckToBottom = messages.height() - panel.height() - panel.scrollTop() <= 0
+    messages.append "<li class='text'>#{text}</li>"
+    @updateServerButton()
     panel.scrollTop messages.height() if stuckToBottom
+  colorize:(text) ->
+    self = this
+    text = text.replace /\[([0-9]*)m(.+?)(\[.+?)/g,(string, code, intext, outtext) ->
+        color = null
+        switch code
+          when '1' then color = 'strong'
+          when '4' then color = 'underline'
+          when '31' then color = 'red'
+          when '32' then color = 'green'
+          when '33' then color = 'yellow'
+          when '36' then color = 'cyan'
+          when '90' then color = 'gray'
+        if color
+          self.lastColor = color if code != '1' && code != '4'
+          "<span class='#{color}'>#{intext}</span>#{outtext}"
+        else
+          "#{intext}#{outtext}"
 
+    return text
+  stripColorCodes:(text) ->
+    return text.replace /\[[0-9]{1,2}m/g, ''
   clearPanel: ->
     @messages.empty()

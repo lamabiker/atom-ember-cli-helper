@@ -5,9 +5,39 @@
 @import "ui-variables";
 
 .ember-cli-helper {
+  .yellow {
+    color: yellow;
+  }
+  .red {
+    color: #E20000;
+  }
+  .green {
+    color: green;
+  }
+  .cyan {
+    color: cyan;
+  }
+  .gray {
+    color: gray;
+  }
+  .strong {
+    font-weight: 700;
+  }
+  .underline {
+    text-decoration: underline;
+  }
   .panel-body {
     height: 95px;
     overflow: scroll;
+    //borrowed from nickclaw/atom-grunt-runner
+    li {
+      padding: 3px 0px;
+      margin: 0px;
+      font-size: 9pt;
+      line-height: 12pt;
+      white-space: normal;
+      font-family: monospace;
+    }
   }
   .btn:focus {
     outline: 0;

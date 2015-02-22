@@ -90,6 +90,10 @@ class EmberCliHelperView extends View
 
       command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
       args    = [task,"--color"]
+      proxyArg = atom.config.get('ember-cli-helper.proxyUrl')
+      if task == 'server' && proxyArg != ''
+        args.push("--proxy")
+        args.push(proxyArg)
       options =
         cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
       stdout = (out)=> @addLine out

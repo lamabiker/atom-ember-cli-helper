@@ -28,6 +28,14 @@ module.exports =
       type: 'string'
       default: '/usr/local/bin/ember'
 
+    proxyUrl:
+      title: 'Proxy URL for Ember --proxy option'
+      description: """
+        Specify an URL for the server you wont to proxy all ajax requests
+        """
+      type: 'string'
+      default: ''
+
     emberProjectPath:
       title: 'Ember Project Path'
       description: """

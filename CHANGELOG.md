@@ -1,3 +1,7 @@
+## 0.6.0 - Get APIs up to speed
+* Include the View packages from the correct repository
+* Upgrade depreciated keymap selectors
+
 ## 0.5.0 - Updated Package APIs
 * Update package to use the "new" package APIs
 * Fix commands that were broken (which were all of them?)

@@ -1,4 +1,5 @@
-{View, Task, BufferedProcess} = require 'atom'
+{Task, BufferedProcess} = require 'atom'
+{View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
 
 module.exports =
@@ -19,8 +20,9 @@ class EmberCliHelperView extends View
 
   initialize: ->
     # Register Commands
-    atom.workspaceView.command "ember-cli-helper:toggle", => @toggle()
-    atom.workspaceView.command "ember-cli-helper:generate-file", => @showGeneratorList()
+    atom.commands.add 'atom-text-editor',
+      "ember-cli-helper:toggle":        => @toggle()
+      "ember-cli-helper:generate-file": => @showGeneratorList()
 
     # Add the path to the Node executable to the $PATH
     nodePath = atom.config.get('ember-cli-helper.pathToNodeExecutable')
@@ -29,11 +31,12 @@ class EmberCliHelperView extends View
 
     # Enable or disable the helper
     try
-      ember = require("#{atom.project.getPath()}/package.json").devDependencies["ember-cli"]
+      ember = require("#{atom.project.getPaths()[0]}/package.json").devDependencies["ember-cli"]
     catch e
       error = e.code
 
     if ember?
+      @generator = new GeneratorListView @
       @toggle()
     else
       @emberProject = false
@@ -56,7 +59,8 @@ class EmberCliHelperView extends View
     if @hasParent()
       @destroy()
     else
-      atom.workspaceView.prependToBottom this
+      atom.workspace.addBottomPanel
+        item: this
 
 
   minimize: ->
@@ -118,7 +122,7 @@ class EmberCliHelperView extends View
 
 
   showGeneratorList: ->
-    generators = new GeneratorListView @
+    @generator.show()
 
 
   runGenerator: (query)->

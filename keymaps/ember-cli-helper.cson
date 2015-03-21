@@ -7,6 +7,6 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
-'.workspace':
+'atom-workspace':
   'ctrl-alt-o': 'ember-cli-helper:toggle'
   'ctrl-alt-g': 'ember-cli-helper:generate-file'

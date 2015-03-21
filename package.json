@@ -15,7 +15,7 @@
     "url": "http://alexlafroscia.com"
   },
   "main": "./lib/ember-cli-helper",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "repository": "https://github.com/alexlafroscia/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {

@@ -1,6 +1,9 @@
 ## 0.6.0 - Get APIs up to speed
 * Include the View packages from the correct repository
 * Upgrade depreciated keymap selectors
+* Move stylesheets to the correct location
+
+**Important Note:** The update removes the ability to generate ArrayControllers and ObjectControllers, since this feature is also being removed from Ember itself
 
 ## 0.5.0 - Updated Package APIs
 * Update package to use the "new" package APIs

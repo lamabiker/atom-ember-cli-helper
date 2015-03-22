@@ -4,7 +4,7 @@
 
 [ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.
 
-![ember cli helper](http://cl.ly/VTGm/Screen%20Shot%202014-05-10%20at%2010.04.24%20PM.png)
+![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
 ## Commands
 

@@ -1,15 +1,12 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
-'context-menu':
-  '.overlayer':
-      'Toggle Ember CLI Helper Panel': 'ember-cli-helper:toggle'
-
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
       'label': 'Ember CLI'
       'submenu': [
-        { 'label': 'Toggle Panel', 'command': 'ember-cli-helper:toggle' }
+        { 'label': 'Toggle Panel',   'command': 'ember-cli-helper:toggle' },
+        { 'label': 'Generate Files', 'command': 'ember-cl-helper:generate-file'}
       ]
     ]
   }

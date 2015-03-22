@@ -1,3 +1,6 @@
+## 0.7.0 - Dynamic Blueprint List
+* Dynamically generate the list of Blueprints
+
 ## 0.6.0 - Get APIs up to speed
 * Include the View packages from the correct repository
 * Upgrade depreciated keymap selectors

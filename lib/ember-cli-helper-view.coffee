@@ -9,12 +9,36 @@ class EmberCliHelperView extends View
     @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
       @div class: 'ember-cli-btn-group', =>
         @div class: 'block', =>
-          @button outlet: 'server',   click: 'startServer',       class: 'btn btn-sm inline-block-tight',           'Server'
-          @button outlet: 'test',     click: 'startTesting',      class: 'btn btn-sm inline-block-tight',           'Test'
-          @button outlet: 'generate', click: 'showGeneratorList', class: 'btn btn-sm inline-block-tight',           'Generate'
-          @button outlet: 'exit',     click: 'stopProcess',       class: 'btn btn-sm inline-block-tight',           'Exit'
-          @button outlet: 'hide',     click: 'toggle',            class: 'btn btn-sm inline-block-tight btn-right', 'Close'
-          @button outlet: 'mini',     click: 'minimize',          class: 'btn btn-sm inline-block-tight btn-right', 'Minimize'
+          @button
+            outlet: 'server',
+            click: 'startServer',
+            class: 'btn btn-sm inline-block-tight',
+            'Server'
+          @button
+            outlet: 'test',
+            click: 'startTesting',
+            class: 'btn btn-sm inline-block-tight',
+            'Test'
+          @button
+            outlet: 'generate',
+            click: 'showGeneratorList',
+            class: 'btn btn-sm inline-block-tight',
+            'Generate'
+          @button
+            outlet: 'exit',
+            click: 'stopProcess',
+            class: 'btn btn-sm inline-block-tight',
+            'Exit'
+          @button
+            outlet: 'hide',
+            click: 'toggle',
+            class: 'btn btn-sm inline-block-tight btn-right',
+            'Close'
+          @button
+            outlet: 'mini',
+            click: 'minimize',
+            class: 'btn btn-sm inline-block-tight btn-right',
+            'Minimize'
       @div outlet: 'panel', class: 'panel-body padded hidden', =>
         @ul outlet: 'messages', class: 'list-group'
 
@@ -36,7 +60,6 @@ class EmberCliHelperView extends View
       error = e.code
 
     if ember?
-      @generator = new GeneratorListView @
       @toggle()
     else
       @emberProject = false
@@ -122,6 +145,8 @@ class EmberCliHelperView extends View
 
 
   showGeneratorList: ->
+    unless @generator?
+      @generator = new GeneratorListView @
     @generator.show()
 
 

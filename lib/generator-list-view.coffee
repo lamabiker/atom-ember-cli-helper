@@ -9,7 +9,7 @@ module.exports = class GeneratorListView extends SelectListView
     @addClass 'overlay from-top'
 
     # Generate list of blueprints from Ember executable
-    @getBlueprints()
+    @listReady = @getBlueprints()
     .catch (err)->
       throw err
     .then (prints)=>
@@ -31,11 +31,12 @@ module.exports = class GeneratorListView extends SelectListView
 
 
   show: ->
-    @storeFocusedElement()
-    @panel ?= atom.workspace.addModalPanel(item: this)
-    @setItems @blueprints
-    @panel.show()
-    @focusFilterEditor()
+    @listReady.then =>
+      @storeFocusedElement()
+      @panel ?= atom.workspace.addModalPanel(item: this)
+      @setItems @blueprints
+      @panel.show()
+      @focusFilterEditor()
 
 
   # Needed for hiding the list of generators

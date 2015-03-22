@@ -6,9 +6,6 @@
 
 ![ember cli helper](http://cl.ly/VTGm/Screen%20Shot%202014-05-10%20at%2010.04.24%20PM.png)
 
-The Ember CLI Helper is super easy to use.  Just press `clt-alt-o` or search
-for `ember cli helper` in the command palette.
-
 ## Commands
 
 | Command  | Description                                                    |
@@ -22,21 +19,7 @@ for `ember cli helper` in the command palette.
 
 ## Generators
 
-Running the generators through Atom is really easy.  When you first open the panel,
-it will bring up a list of file types to generate.  Everything that the Ember CLI
-supports is supported, currently:
-
-- component
-- controller
-- helper
-- mixin
-- route
-- template
-- view
-
-Once you select a type, you'll be prompted to enter a name, and the output will
-appear in orange in the bottom panel.  If generating a controller, you'll also
-be prompted to create an object, array, or "neither" -type controller.
+Running the generators through Atom is really easy.  When you first open the panel, it will bring up a list of file types to generate.  This list is based on the output of `ember g --help`, and therefore should include all future blueprints as well as those added by addons automatically. Once you select a type, you'll be prompted to enter a name, and the output will appear in orange in the bottom panel.
 
 ## Help! It's broken!
 
@@ -60,7 +43,7 @@ That might be the case! But first, check if specifying the path to the Ember and
 
 ## Troubleshooting
 
-Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try openning the project from the command line with the `atom` command see if that fixes the issue.
+Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
 
 
 ***

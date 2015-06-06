@@ -6,6 +6,14 @@
 
 ![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
+***
+
+# THIS PLUGIN IS NO LONGER UNDER DEVELOPMENT
+
+Unfortunately, I am no longer a CoffeeScript writer nor an Atom user, so I won't be updating this plugin any longer.  If anyone is interested in taking over, I'd be happy to pass it on to someone else; just get in touch.
+
+***
+
 ## Commands
 
 | Command  | Description                                                    |

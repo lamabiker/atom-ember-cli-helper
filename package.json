@@ -14,6 +14,10 @@
     "name": "Alex LaFroscia",
     "url": "http://alexlafroscia.com"
   },
+  "contributors": [{
+    "name": "Marius Andra",
+    "url": "http://mariusandra.com"
+  }],
   "main": "./lib/ember-cli-helper",
   "version": "0.7.4",
   "repository": "https://github.com/apprentus/atom-ember-cli-helper",

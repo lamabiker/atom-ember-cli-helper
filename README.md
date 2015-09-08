@@ -1,13 +1,16 @@
 # Ember CLI Helper
 
-***
-
-[![Gitter chat](https://badges.gitter.im/alexlafroscia/atom-ember-cli-helper.png)](https://gitter.im/alexlafroscia/atom-ember-cli-helper)
+[![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
 [ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.
 
 ![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
+## Keyboard shortcuts
+
+| Key        | Action                                                   |
+| ctrl+alt+e | Toggle between the component/controller and the template |
+| ctrl+alt+r | Toggle between the controller and the route              |
 
 ## Commands
 
@@ -43,6 +46,7 @@ That might be the case! But first, check if specifying the path to the Ember and
 - [ ] Use the editor's theme to get colors for success and error in the command output
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
+- [x] Add convenience shortcuts to switch between component and template (and route and ...)
 
 ## Troubleshooting
 
@@ -50,6 +54,8 @@ Some users have experienced problems running the commands when they openning the
 
 
 ***
+
+**Very special thanks** to [@alexlafroscia][https://github.com/alexlafroscia/] for creating the original atom plugin!
 
 **Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)

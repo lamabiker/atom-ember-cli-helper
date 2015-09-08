@@ -2,12 +2,6 @@
 
 ***
 
-# THIS PLUGIN IS NO LONGER UNDER DEVELOPMENT
-
-Unfortunately, I am no longer a CoffeeScript writer nor an Atom user, so I won't be updating this plugin any longer.  If anyone is interested in taking over, I'd be happy to pass it on to someone else; just get in touch.
-
-***
-
 [![Gitter chat](https://badges.gitter.im/alexlafroscia/atom-ember-cli-helper.png)](https://gitter.im/alexlafroscia/atom-ember-cli-helper)
 
 [ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.

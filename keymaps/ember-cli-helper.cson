@@ -10,3 +10,5 @@
 'atom-workspace':
   'ctrl-alt-o': 'ember-cli-helper:toggle'
   'ctrl-alt-g': 'ember-cli-helper:generate-file'
+  'ctrl-alt-e': 'ember-cli-helper:switch-file'
+  'ctrl-alt-r': 'ember-cli-helper:switch-route'

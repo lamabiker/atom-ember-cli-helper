@@ -1,6 +1,8 @@
 {Task, BufferedProcess} = require 'atom'
 {View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
+path = require 'path'
+fs = require 'fs'
 
 module.exports =
 class EmberCliHelperView extends View
@@ -9,12 +11,14 @@ class EmberCliHelperView extends View
     @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
       @div class: 'ember-cli-btn-group', =>
         @div class: 'block', =>
-          @button outlet: 'server',   click: 'startServer',       class: 'btn btn-sm inline-block-tight',           'Server'
-          @button outlet: 'test',     click: 'startTesting',      class: 'btn btn-sm inline-block-tight',           'Test'
-          @button outlet: 'generate', click: 'showGeneratorList', class: 'btn btn-sm inline-block-tight',           'Generate'
-          @button outlet: 'exit',     click: 'stopProcess',       class: 'btn btn-sm inline-block-tight',           'Exit'
-          @button outlet: 'hide',     click: 'toggle',            class: 'btn btn-sm inline-block-tight btn-right', 'Close'
-          @button outlet: 'mini',     click: 'minimize',          class: 'btn btn-sm inline-block-tight btn-right', 'Minimize'
+          @button outlet: 'switch',     click: 'switchFile',        class: 'btn btn-sm inline-block-tight',           'c/t'
+          @button outlet: 'route',      click: 'switchRoute',       class: 'btn btn-sm inline-block-tight',           'r'
+          @button outlet: 'server',     click: 'startServer',       class: 'btn btn-sm inline-block-tight',           'Server'
+          @button outlet: 'test',       click: 'startTesting',      class: 'btn btn-sm inline-block-tight',           'Test'
+          @button outlet: 'generate',   click: 'showGeneratorList', class: 'btn btn-sm inline-block-tight',           'Generate'
+          @button outlet: 'exit',       click: 'stopProcess',       class: 'btn btn-sm inline-block-tight',           'Exit'
+          @button outlet: 'hide',       click: 'toggle',            class: 'btn btn-sm inline-block-tight btn-right', 'Close'
+          @button outlet: 'mini',       click: 'minimize',          class: 'btn btn-sm inline-block-tight btn-right', 'Minimize'
       @div outlet: 'panel', class: 'panel-body padded hidden', =>
         @ul outlet: 'messages', class: 'list-group'
 
@@ -22,6 +26,8 @@ class EmberCliHelperView extends View
     # Register Commands
     atom.commands.add 'atom-text-editor',
       "ember-cli-helper:toggle":        => @toggle()
+      "ember-cli-helper:switch-file":   => @switchFile()
+      "ember-cli-helper:switch-route":  => @switchRoute()
       "ember-cli-helper:generate-file": => @showGeneratorList()
 
     # Add the path to the Node executable to the $PATH
@@ -66,6 +72,106 @@ class EmberCliHelperView extends View
   minimize: ->
     @panel.toggleClass 'hidden'
 
+  getPathComponents: ->
+    separator = path.sep
+    editor = atom.workspace.getActivePaneItem()
+    file = editor?.buffer.file
+    fullPath = file?.getPath()
+    fileName = file?.getBaseName()
+
+    # must have a file with an extension under /app/*
+    return [] if fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
+
+    extension = path.extname(fileName)
+
+    # TODO: choose only the last "app" folder
+    pathUntilApp = fullPath.split(separator+'app'+separator)[0] + separator + 'app' + separator
+    pathInApp = fullPath.split(separator+'app'+separator)[1].split(separator)
+    pathInApp.pop()
+
+    [pathUntilApp, pathInApp, fileName, extension]
+
+  switchFile: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    separator = path.sep
+    goodPaths = []
+
+    # script to template
+    if extension == '.coffee' || extension == '.js'
+      newFileName = fileName.replace(/\.(js|coffee)$/, '.hbs')
+
+      # components/*.js -> templates/components/*.hbs
+      if paths[0] == 'components'
+        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+
+      # controllers/*.js -> templates/*.hbs
+      # routes/*.js -> templates/*.hbs
+      else if paths[0] == 'controllers' || paths[0] == 'routes'
+        paths.shift()
+        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+
+    # template to script
+    else if extension == '.hbs'
+      newFileNameJs = fileName.replace(/\.hbs$/, '.js')
+      newFileNameCoffee = fileName.replace(/\.hbs$/, '.coffee')
+
+      # templates/components/*.hbs -> components/*.js
+      if paths[0] == 'templates' && paths[1] == 'components'
+        paths.shift()
+        goodPaths.push paths.concat([newFileNameJs]).join(separator)
+        goodPaths.push paths.concat([newFileNameCoffee]).join(separator)
+
+      # templates/xyz/*.hbz -> controllers/
+      else
+        paths.shift()
+        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
+        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+
+    @openBestMatch(pathUntilApp, goodPaths)
+
+  switchRoute: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    separator = path.sep
+    goodPaths = []
+
+    newFileNameJs = fileName.replace(/\.(js|coffee|hbs)$/, '.js')
+    newFileNameCoffee = fileName.replace(/\.(js|coffee|hbs)$/, '.coffee')
+
+    # script to template
+    if extension == '.coffee' || extension == '.js'
+      # routes/*.js -> controllers/*.js
+      if paths[0] == 'routes'
+        paths.shift()
+        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
+        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+
+      # controllers/*.js -> routes/*.js
+      else if paths[0] == 'controllers'
+        paths.shift()
+        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
+        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+
+    # template to script
+    else if extension == '.hbs'
+      # templates/(!components/)*.hbs -> routes/*.js
+      if paths[0] == 'templates' && paths[1] != 'components'
+        paths.shift()
+        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
+        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+
+    @openBestMatch(pathUntilApp, goodPaths)
+
+  openBestMatch: (pathUntilApp, goodPaths) ->
+    legitPaths = goodPaths.filter (pathToTry) =>
+      fs.existsSync(pathUntilApp + pathToTry)
+    
+    bestPath = legitPaths[0] || goodPaths[0]
+    if bestPath
+      atom.workspace.open(pathUntilApp + bestPath)
 
   startServer: ->
     @runCommand 'Ember CLI Server Started'.fontcolor("green"), 'server'

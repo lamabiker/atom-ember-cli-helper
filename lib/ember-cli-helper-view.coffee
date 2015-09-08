@@ -19,23 +19,36 @@ class EmberCliHelperView extends View
         @ul outlet: 'messages', class: 'list-group'
 
   initialize: ->
-    # Register Commands
-    atom.commands.add 'atom-text-editor',
-      "ember-cli-helper:toggle":        => @toggle()
-      "ember-cli-helper:generate-file": => @showGeneratorList()
-
     # Add the path to the Node executable to the $PATH
     nodePath = atom.config.get('ember-cli-helper.pathToNodeExecutable')
     nodePath = nodePath.substring(0, nodePath.length - 4)
     process.env.PATH += ":#{nodePath}"
 
-    # Enable or disable the helper
-    try
-      ember = require("#{atom.project.getPaths()[0]}/package.json").devDependencies["ember-cli"]
-    catch e
-      error = e.code
+    findEmberCli = (directory) ->
+      if directory.getFile(".ember-cli").existsSync()
+        return directory.getPath()
+      else
+        for entry in directory.getEntriesSync()
+          if entry.isDirectory() and entry.getBaseName() not in ['bower_components', 'node_modules']
+            path = findEmberCli entry
+            if path
+              return path
 
-    if ember?
+      return null
+
+    userCWD = atom.config.get('ember-cli-helper.emberProjectPath')
+
+    if userCWD != "/"
+      @emberCWD = atom.project.getPaths()[0] + userCWD
+    else
+      @emberCWD = findEmberCli atom.project.getDirectories()[0]
+
+    if @emberCWD?
+      # Register Commands
+      atom.commands.add 'atom-text-editor',
+        "ember-cli-helper:toggle":        => @toggle()
+        "ember-cli-helper:generate-file": => @showGeneratorList()
+
       @generator = new GeneratorListView @
       @toggle()
     else
@@ -92,7 +105,7 @@ class EmberCliHelperView extends View
       command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
       args    = [task]
       options =
-        cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
+        cwd: @emberCWD
       stdout = (out)=> @addLine out
       stderr = (out)=> @addLine out.fontcolor('red')
       exit = (code)=>
@@ -135,7 +148,7 @@ class EmberCliHelperView extends View
     args.push 'coffee:true' if atom.config.get 'ember-cli-helper.generateCoffeescript'
 
     options =
-      cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
+      cwd: @emberCWD
     stdout = (out)=> @addLine out.fontcolor("orange")
     exit = (code)-> atom.beep() unless code == 0
     try

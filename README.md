@@ -4,6 +4,8 @@
 
 [ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@marius0](https://github.com/marius0), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
 
+Feel free to open issues if you find something. Pull requests are more than welcome!
+
 ![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
 ## Keyboard shortcuts

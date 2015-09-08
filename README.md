@@ -2,7 +2,7 @@
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
-[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@marius0](https://github.com/marius0), originally created by [@alexlafroscia](https://github.com/alexlafroscia/).
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@marius0](https://github.com/marius0), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
 
 ![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
@@ -48,6 +48,7 @@ That might be the case! But first, check if specifying the path to the Ember and
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
 - [x] Add convenience shortcuts to switch between component and template (and route and ...)
+- [ ] Add option to enter components when clicking CMD+DOWN over {{forms/super-select ... }} --> opens components/forms/super-select.js
 
 ## Troubleshooting
 

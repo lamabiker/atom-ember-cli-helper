@@ -168,7 +168,7 @@ class EmberCliHelperView extends View
   openBestMatch: (pathUntilApp, goodPaths) ->
     legitPaths = goodPaths.filter (pathToTry) =>
       fs.existsSync(pathUntilApp + pathToTry)
-    
+
     bestPath = legitPaths[0] || goodPaths[0]
     if bestPath
       atom.workspace.open(pathUntilApp + bestPath)
@@ -228,7 +228,7 @@ class EmberCliHelperView extends View
 
 
   showGeneratorList: ->
-    @generator.show()
+    @generator.show() if @generator
 
 
   runGenerator: (query)->

@@ -2,7 +2,7 @@
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
-[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom.
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@marius0](https://github.com/marius0), originally created by [@alexlafroscia](https://github.com/alexlafroscia/).
 
 ![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
@@ -60,5 +60,6 @@ Some users have experienced problems running the commands when they openning the
 
 **Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)
-package, which was my inspiration for building this and a big help in putting it
-together.
+package, which was [@alexlafroscia](https://github.com/alexlafroscia/)'s inspiration for building this and a big help in putting it together.
+
+**Finally a big thank you** to [Apprentus](https://www.apprentus.com) for paying me to work on this! :)

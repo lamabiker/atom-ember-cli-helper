@@ -8,7 +8,8 @@
 
 ## Keyboard shortcuts
 
-| Key        | Action                                                   |
+| Keybinding | Action                                                   |
+| :--        | :--                                                      |
 | ctrl+alt+e | Toggle between the component/controller and the template |
 | ctrl+alt+r | Toggle between the controller and the route              |
 
@@ -55,7 +56,7 @@ Some users have experienced problems running the commands when they openning the
 
 ***
 
-**Very special thanks** to [@alexlafroscia][https://github.com/alexlafroscia/] for creating the original atom plugin!
+**Very special thanks** to [@alexlafroscia](https://github.com/alexlafroscia/) for creating the original atom plugin!
 
 **Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)

@@ -10,10 +10,11 @@ Feel free to open issues if you find something. Pull requests are more than welc
 
 ## Keyboard shortcuts
 
-| Keybinding | Action                                                   |
-| :--        | :--                                                      |
-| ctrl+alt+e | Toggle between the component/controller and the template |
-| ctrl+alt+r | Toggle between the controller and the route              |
+| Keybinding     | Action                                                                 |
+| :--            | :--                                                                    |
+| ctrl+alt+e     | Toggle between the component/controller and the template               |
+| ctrl+alt+r     | Toggle between the controller and the route                            |
+| ctrl+alt+enter | Jump into templates. Press when cursor over {{forms/super-select ...}} to open templates/components/forms/super-select.hbs |
 
 ## Commands
 
@@ -50,7 +51,7 @@ That might be the case! But first, check if specifying the path to the Ember and
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
 - [x] Add convenience shortcuts to switch between component and template (and route and ...)
-- [ ] Add option to enter components when clicking CMD+DOWN over {{forms/super-select ... }} --> opens components/forms/super-select.js
+- [x] Add option to enter components when clicking something over {{forms/super-select ... }} --> opens components/forms/super-select.js
 
 ## Troubleshooting
 

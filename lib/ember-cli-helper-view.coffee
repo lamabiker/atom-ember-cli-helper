@@ -25,10 +25,11 @@ class EmberCliHelperView extends View
   initialize: ->
     # Register Commands
     atom.commands.add 'atom-text-editor',
-      "ember-cli-helper:toggle":        => @toggle()
-      "ember-cli-helper:switch-file":   => @switchFile()
-      "ember-cli-helper:switch-route":  => @switchRoute()
-      "ember-cli-helper:generate-file": => @showGeneratorList()
+      "ember-cli-helper:toggle":         => @toggle()
+      "ember-cli-helper:switch-file":    => @switchFile()
+      "ember-cli-helper:switch-route":   => @switchRoute()
+      "ember-cli-helper:open-component": => @openComponent()
+      "ember-cli-helper:generate-file":  => @showGeneratorList()
 
     # Add the path to the Node executable to the $PATH
     nodePath = atom.config.get('ember-cli-helper.pathToNodeExecutable')
@@ -164,6 +165,29 @@ class EmberCliHelperView extends View
         goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
 
     @openBestMatch(pathUntilApp, goodPaths)
+
+  openComponent: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    separator = path.sep
+    editor = atom.workspace.getActivePaneItem()
+
+    cursor = editor.getCursorBufferPosition()
+    line = editor.buffer.lines[cursor.row]
+
+    startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
+    return if startColumn == -1
+
+    line = line.substring(startColumn + 2)
+    line = line.substring(1) if line.indexOf('#') == 0
+
+    componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
+
+    if componentName && componentName.indexOf('-') > 0
+      templateName = "templates/components/"+componentName.replace('/', separator)+".hbs"
+      @openBestMatch(pathUntilApp, [templateName])
+
 
   openBestMatch: (pathUntilApp, goodPaths) ->
     legitPaths = goodPaths.filter (pathToTry) =>

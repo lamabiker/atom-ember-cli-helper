@@ -195,7 +195,7 @@ class EmberCliHelperView extends View
 
     bestPath = legitPaths[0] || goodPaths[0]
     if bestPath
-      atom.workspace.open(pathUntilApp + bestPath)
+      atom.workspace.open(pathUntilApp + bestPath, { searchAllPanes: true })
 
   startServer: ->
     @runCommand 'Ember CLI Server Started'.fontcolor("green"), 'server'

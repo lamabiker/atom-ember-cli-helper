@@ -40,7 +40,7 @@ module.exports =
       default: '/'
 
     emberServerParameters:
-      title: 'Ember -server Parameters'
+      title: 'Ember Server Parameters'
       description: """
         Additional parameters to pass to the 'ember server' command.
         """

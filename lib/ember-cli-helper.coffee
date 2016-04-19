@@ -39,6 +39,14 @@ module.exports =
       type: 'string'
       default: '/'
 
+    emberServerParameters:
+      title: 'Ember Server Parameters'
+      description: """
+        Additional parameters to pass to the 'ember server' command.
+        """
+      type: 'string'
+      default: ''
+
 
   activate: (state = {}) ->
     @emberCliHelperView = new EmberCliHelperView(state.emberCliHelperViewState)

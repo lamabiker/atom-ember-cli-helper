@@ -195,17 +195,18 @@ class EmberCliHelperView extends View
 
     bestPath = legitPaths[0] || goodPaths[0]
     if bestPath
-      atom.workspace.open(pathUntilApp + bestPath)
+      atom.workspace.open(pathUntilApp + bestPath, { searchAllPanes: true })
 
   startServer: ->
-    @runCommand 'Ember CLI Server Started'.fontcolor("green"), 'server'
+    serverParameters = atom.config.get('ember-cli-helper.emberServerParameters')
+    @runCommand 'Ember CLI Server Started'.fontcolor("green"), 'server', serverParameters
 
 
   startTesting: ->
     @runCommand 'Ember CLI Testing Started'.fontcolor("green"), 'test'
 
 
-  runCommand: (message, task) ->
+  runCommand: (message, task, params) ->
     if @lastProcess == task
       @minimize()
     else
@@ -220,7 +221,8 @@ class EmberCliHelperView extends View
       @addLine message
 
       command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
-      args    = [task]
+      args = if params then params.split(' ') else []
+      args.unshift task
       options =
         cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
       stdout = (out)=> @addLine out

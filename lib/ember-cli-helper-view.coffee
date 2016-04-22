@@ -8,7 +8,7 @@ module.exports =
 class EmberCliHelperView extends View
 
   @content: ->
-    @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
+    @div class: 'ember-cli-helper native-key-bindings', =>
       @div class: 'ember-cli-resize-handle', outlet: 'resizeHandle'
       @div class: 'ember-cli-btn-group', outlet: 'buttonGroup', =>
         @div class: 'block', =>
@@ -42,7 +42,7 @@ class EmberCliHelperView extends View
 
     # Enable or disable the helper
     try
-      ember = require("#{@getEmberProjectPath()}/package.json").devDependencies["ember-cli"]
+      ember = require("#{atom.project.getPaths()[0]}/package.json").devDependencies["ember-cli"]
     catch e
       error = e.code
 
@@ -51,15 +51,8 @@ class EmberCliHelperView extends View
       @toggle()
     else
       @emberProject = false
-      @addLine "This is not an Ember CLI projet in #{@getEmberProjectPath()}"
-      @panel.removeClass 'hidden'
+      @addLine "This is not an Ember CLI projet!"
 
-
-  getEmberProjectPath: ->
-    atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
-
-  getEmberPath: ->
-    atom.config.get('ember-cli-helper.pathToEmberExecutable')
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
@@ -110,7 +103,7 @@ class EmberCliHelperView extends View
     fileName = file?.getBaseName()
 
     # must have a file with an extension under /app/*
-    return [] if !fileName || fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
+    return [] if fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
 
     extension = path.extname(fileName)
 
@@ -249,11 +242,11 @@ class EmberCliHelperView extends View
       @clearPanel()
       @addLine message
 
-      command = @getEmberPath()
+      command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
       args = if params then params.split(' ') else []
       args.unshift task
       options =
-        cwd: @getEmberProjectPath()
+        cwd: atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
       stdout = (out)=> @addLine out
       stderr = (out)=> @addLine out.fontcolor('red')
       exit = (code)=>
@@ -283,19 +276,12 @@ class EmberCliHelperView extends View
 
 
   showGeneratorList: ->
-    if @generator
-      try
-        @generator.show()
-      catch e
-        @addLine "Trobule opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
-        @panel.removeClass 'hidden'
-    else
-      @addLine "Could not find ember project in #{@getEmberProjectPath()} (ember-cli: #{@getEmberPath()})".fontcolor("red")
-      @panel.removeClass 'hidden'
+    @generator.show() if @generator
+
 
   runGenerator: (query)->
     @minimize() if @panel.hasClass 'hidden'
-    command = @getEmberPath()
+    command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
 
     # Set up args (generator to run)
     args = ['generate']

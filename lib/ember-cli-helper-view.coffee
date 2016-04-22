@@ -1,5 +1,5 @@
 {Task, BufferedProcess} = require 'atom'
-{View} = require 'atom-space-pen-views'
+{$, View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
 path = require 'path'
 fs = require 'fs'
@@ -9,7 +9,8 @@ class EmberCliHelperView extends View
 
   @content: ->
     @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
-      @div class: 'ember-cli-btn-group', =>
+      @div class: 'ember-cli-resize-handle', outlet: 'resizeHandle'
+      @div class: 'ember-cli-btn-group', outlet: 'buttonGroup', =>
         @div class: 'block', =>
           @button outlet: 'switch',     click: 'switchFile',        class: 'btn btn-sm inline-block-tight',           'c/t'
           @button outlet: 'route',      click: 'switchRoute',       class: 'btn btn-sm inline-block-tight',           'r'
@@ -30,6 +31,9 @@ class EmberCliHelperView extends View
       "ember-cli-helper:switch-route":   => @switchRoute()
       "ember-cli-helper:open-component": => @openComponent()
       "ember-cli-helper:generate-file":  => @showGeneratorList()
+
+    # Set up panel resizing
+    @on 'mousedown', '.ember-cli-resize-handle', (e) => @resizeStarted(e)
 
     # Add the path to the Node executable to the $PATH
     nodePath = atom.config.get('ember-cli-helper.pathToNodeExecutable')
@@ -58,6 +62,7 @@ class EmberCliHelperView extends View
   destroy: ->
     @stopProcess()
     @clearPanel()
+    @resizeStopped()
     @panel.removeClass 'hidden'
     @detach()
 
@@ -72,6 +77,23 @@ class EmberCliHelperView extends View
 
   minimize: ->
     @panel.toggleClass 'hidden'
+
+
+  # panel resizing code based on atom's tree-view package
+  resizeStarted: =>
+    $(document).on('mousemove', @resizePanel)
+    $(document).on('mouseup', @resizeStopped)
+
+  resizeStopped: =>
+    $(document).off('mousemove', @resizePanel)
+    $(document).off('mouseup', @resizeStopped)
+
+  resizePanel: ({pageY, which}) =>
+    return @resizeStopped() unless which is 1
+    height = @outerHeight() + @offset().top - pageY
+    barHeight = @buttonGroup.height();
+    @panel.innerHeight(height - barHeight);
+
 
   getPathComponents: ->
     separator = path.sep

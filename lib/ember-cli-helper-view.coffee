@@ -107,7 +107,7 @@ class EmberCliHelperView extends View
     fileName = file?.getBaseName()
 
     # must have a file with an extension under /app/*
-    return [] if fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
+    return [] if !fileName || fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
 
     extension = path.extname(fileName)
 

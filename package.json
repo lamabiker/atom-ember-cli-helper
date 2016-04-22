@@ -21,7 +21,7 @@
     }
   ],
   "main": "./lib/ember-cli-helper",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "repository": "https://github.com/apprentus/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {

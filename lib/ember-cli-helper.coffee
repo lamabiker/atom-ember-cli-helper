@@ -29,12 +29,12 @@ module.exports =
       default: '/usr/local/bin/ember'
 
     emberProjectPath:
-      title: 'Ember Project Path'
+      title: 'Ember Project Path (relative)'
       description: """
         Change only if your Ember project is not in the root of your project,
         i.e. if the Ember project is a subdirectory of the directory that's
         currently open in Atom. Particularly useful with project-manager, where
-        you can change settings on a per-project basis.
+        you can change settings on a per-project basis. Restart atom after changing this.
         """
       type: 'string'
       default: '/'

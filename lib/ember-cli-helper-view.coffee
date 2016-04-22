@@ -42,7 +42,8 @@ class EmberCliHelperView extends View
 
     # Enable or disable the helper
     try
-      ember = require("#{atom.project.getPaths()[0]}/package.json").devDependencies["ember-cli"]
+      emberPath = atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
+      ember = require("#{emberPath}/package.json").devDependencies["ember-cli"]
     catch e
       error = e.code
 

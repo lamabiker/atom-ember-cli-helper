@@ -35,6 +35,8 @@ Running the generators through Atom is really easy.  When you first open the pan
 
 That might be the case! But first, check if specifying the path to the Ember and NPM packages fixes your problems.  It probably, hopefully will.  If it doesn't, please file an issue so I can try fixing it!
 
+Known limitation: make sure your ember project is the first project (first in the list) opened in Atom.
+
 ## Settings
 
 | Setting | Purpose | Default Value |
@@ -57,6 +59,7 @@ That might be the case! But first, check if specifying the path to the Ember and
 
 Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
 
+If the generators button doesn't work, `ember-cli-helper` probably can't find your ember project. Double check all the paths and make sure your ember project is the first opened project.
 
 ***
 

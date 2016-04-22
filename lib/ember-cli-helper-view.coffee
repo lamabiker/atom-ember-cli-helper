@@ -42,7 +42,7 @@ class EmberCliHelperView extends View
 
     # Enable or disable the helper
     try
-      ember = require("#{@getEmberPath()}/package.json").devDependencies["ember-cli"]
+      ember = require("#{@getEmberProjectPath()}/package.json").devDependencies["ember-cli"]
     catch e
       error = e.code
 
@@ -51,12 +51,15 @@ class EmberCliHelperView extends View
       @toggle()
     else
       @emberProject = false
-      @addLine "This is not an Ember CLI projet in #{@getEmberPath()}"
+      @addLine "This is not an Ember CLI projet in #{@getEmberProjectPath()}"
       @panel.removeClass 'hidden'
 
 
-  getEmberPath: ->
+  getEmberProjectPath: ->
     atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')
+
+  getEmberPath: ->
+    atom.config.get('ember-cli-helper.pathToEmberExecutable')
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
@@ -246,11 +249,11 @@ class EmberCliHelperView extends View
       @clearPanel()
       @addLine message
 
-      command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
+      command = @getEmberPath()
       args = if params then params.split(' ') else []
       args.unshift task
       options =
-        cwd: @getEmberPath()
+        cwd: @getEmberProjectPath()
       stdout = (out)=> @addLine out
       stderr = (out)=> @addLine out.fontcolor('red')
       exit = (code)=>
@@ -281,14 +284,18 @@ class EmberCliHelperView extends View
 
   showGeneratorList: ->
     if @generator
-      @generator.show()
+      try
+        @generator.show()
+      catch e
+        @addLine "Trobule opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
+        @panel.removeClass 'hidden'
     else
-      @addLine "Could not find ember project in #{@getEmberPath()}".fontcolor("red")
+      @addLine "Could not find ember project in #{@getEmberProjectPath()} (ember-cli: #{@getEmberPath()})".fontcolor("red")
       @panel.removeClass 'hidden'
 
   runGenerator: (query)->
     @minimize() if @panel.hasClass 'hidden'
-    command = atom.config.get('ember-cli-helper.pathToEmberExecutable')
+    command = @getEmberPath()
 
     # Set up args (generator to run)
     args = ['generate']

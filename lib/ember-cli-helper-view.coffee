@@ -8,7 +8,7 @@ module.exports =
 class EmberCliHelperView extends View
 
   @content: ->
-    @div class: 'ember-cli-helper tool-panel panel-bottom native-key-bindings', =>
+    @div class: 'ember-cli-helper native-key-bindings', =>
       @div class: 'ember-cli-resize-handle', outlet: 'resizeHandle'
       @div class: 'ember-cli-btn-group', outlet: 'buttonGroup', =>
         @div class: 'block', =>

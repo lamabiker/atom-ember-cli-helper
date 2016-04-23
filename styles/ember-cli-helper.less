@@ -7,7 +7,15 @@
 .ember-cli-helper {
   .panel-body {
     height: 95px;
-    overflow: scroll;
+    overflow-y: scroll;
+    border-top: 1px solid @inset-panel-border-color;
+    background-color: @inset-panel-background-color;
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
+    li {
+      white-space: pre;
+      line-height: 1.5;
+    }
   }
   .btn:focus {
     outline: 0;

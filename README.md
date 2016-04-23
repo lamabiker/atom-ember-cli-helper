@@ -2,7 +2,7 @@
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
-[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@marius0](https://github.com/marius0), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@mariusandra](https://github.com/mariusandra), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
 
 Feel free to open issues if you find something. Pull requests are more than welcome!
 

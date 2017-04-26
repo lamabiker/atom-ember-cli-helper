@@ -1,3 +1,5 @@
+As I'm no longer using Atom or Ember, I'm looking for maintainers for this project. See [issue #34](https://github.com/apprentus/atom-ember-cli-helper/issues/34)
+
 # Ember CLI Helper
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)

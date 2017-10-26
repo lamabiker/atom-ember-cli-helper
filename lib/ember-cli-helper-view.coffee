@@ -203,7 +203,7 @@ class EmberCliHelperView extends View
     editor = atom.workspace.getActivePaneItem()
 
     cursor = editor.getCursorBufferPosition()
-    line = editor.buffer.lines[cursor.row]
+    line = editor.buffer.lineForRow(cursor.row)
 
     startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
     return if startColumn == -1

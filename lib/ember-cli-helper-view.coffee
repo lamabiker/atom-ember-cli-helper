@@ -209,12 +209,12 @@ class EmberCliHelperView extends View
     if extension == '.sass'
       newFileName = fileName.replace(/\.(sass)$/, '.hbs')
 
-      # components/*.js -> templates/components/*.hbs
+      # styles/components/*.sass -> templates/components/*.hbs
       if paths[0] == 'styles' && paths[1] == 'components'
         paths.shift()
         goodPaths.push ['templates'].concat(paths).concat([newFileName]).join(separator)
 
-    # template to script
+    # template to style
     else if extension == '.hbs'
       # templates/components/*.hbs -> styles/components/*.sass
       if paths[0] == 'templates' && paths[1] == 'components'

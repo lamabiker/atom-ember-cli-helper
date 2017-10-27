@@ -16,13 +16,17 @@
   },
   "contributors": [
     {
+      "name": "Liam Baker",
+      "url": "http://lamabiker.com"
+    },
+    {
       "name": "Marius Andra",
       "url": "http://mariusandra.com"
     }
   ],
   "main": "./lib/ember-cli-helper",
   "version": "0.10.0",
-  "repository": "https://github.com/apprentus/atom-ember-cli-helper",
+  "repository": "https://github.com/lamabiker/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"

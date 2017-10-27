@@ -29,6 +29,7 @@ class EmberCliHelperView extends View
       "ember-cli-helper:toggle":         => @toggle()
       "ember-cli-helper:switch-file":    => @switchFile()
       "ember-cli-helper:switch-route":   => @switchRoute()
+      "ember-cli-helper:switch-style":   => @switchStyle()
       "ember-cli-helper:open-component": => @openComponent()
       "ember-cli-helper:generate-file":  => @showGeneratorList()
 
@@ -195,6 +196,34 @@ class EmberCliHelperView extends View
 
     @openBestMatch(pathUntilApp, goodPaths)
 
+  switchStyle: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    separator = path.sep
+    goodPaths = []
+
+    newFileNameSass = fileName.replace(/\.(js|coffee|hbs)$/, '.sass')
+
+    # style to template
+    if extension == '.sass'
+      newFileName = fileName.replace(/\.(sass)$/, '.hbs')
+
+      # styles/components/*.sass -> templates/components/*.hbs
+      if paths[0] == 'styles' && paths[1] == 'components'
+        paths.shift()
+        goodPaths.push ['templates'].concat(paths).concat([newFileName]).join(separator)
+
+    # template to style
+    else if extension == '.hbs'
+      # templates/components/*.hbs -> styles/components/*.sass
+      if paths[0] == 'templates' && paths[1] == 'components'
+        paths.shift()
+        paths.unshift('styles')
+        goodPaths.push paths.concat([newFileNameSass]).join(separator)
+
+    @openBestMatch(pathUntilApp, goodPaths)
+
   openComponent: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
     return unless pathUntilApp
@@ -203,7 +232,7 @@ class EmberCliHelperView extends View
     editor = atom.workspace.getActivePaneItem()
 
     cursor = editor.getCursorBufferPosition()
-    line = editor.buffer.lines[cursor.row]
+    line = editor.buffer.lineForRow(cursor.row)
 
     startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
     return if startColumn == -1

@@ -50,7 +50,7 @@ Known limitation: make sure your ember project is the first project (first in th
 
 - [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
-- [ ] Use the editor's theme to get colors for success and error in the command output
+- [ ] Use the editor's theme to get colours for success and error in the command output
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
 - [x] Add convenience shortcuts to switch between component and template (and route and ...)
@@ -58,7 +58,7 @@ Known limitation: make sure your ember project is the first project (first in th
 
 ## Troubleshooting
 
-Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
+Some users have experienced problems running the commands when they opening their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
 
 If the generators button doesn't work, `ember-cli-helper` probably can't find your ember project. Double check all the paths and make sure your ember project is the first opened project.
 

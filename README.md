@@ -1,10 +1,8 @@
-As I'm no longer using Atom or Ember, I'm looking for maintainers for this project. See [issue #34](https://github.com/apprentus/atom-ember-cli-helper/issues/34)
-
 # Ember CLI Helper
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
-[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@mariusandra](https://github.com/mariusandra), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@lamabiker](https://github.com/lamabiker), previously maintained by [@mariusandra](https://github.com/mariusandra), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development originally sponsored by [Apprentus](https://www.apprentus.com).
 
 Feel free to open issues if you find something. Pull requests are more than welcome!
 
@@ -15,6 +13,7 @@ Feel free to open issues if you find something. Pull requests are more than welc
 | Keybinding     | Action                                                                 |
 | :--            | :--                                                                    |
 | ctrl+alt+e     | Toggle between the component/controller and the template               |
+| ctrl+alt+s     | Toggle between the component and the styles/component.sass file        |
 | ctrl+alt+r     | Toggle between the controller and the route                            |
 | ctrl+alt+enter | Jump into templates. Press when cursor over {{forms/super-select ...}} to open templates/components/forms/super-select.hbs |
 
@@ -65,10 +64,8 @@ If the generators button doesn't work, `ember-cli-helper` probably can't find yo
 
 ***
 
-**Very special thanks** to [@alexlafroscia](https://github.com/alexlafroscia/) for creating the original atom plugin!
+**Very special thanks** to [@alexlafroscia](https://github.com/alexlafroscia/) for creating the original atom plugin and to [@mariusandra](https://github.com/mariusandra) maintaining it!
 
 **Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)
 package, which was [@alexlafroscia](https://github.com/alexlafroscia/)'s inspiration for building this and a big help in putting it together.
-
-**Finally a big thank you** to [Apprentus](https://www.apprentus.com) for paying me to work on this! :)

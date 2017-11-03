@@ -1,6 +1,7 @@
 {Task, BufferedProcess} = require 'atom'
 {$, View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
+{TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS} = require './constants'
 path = require 'path'
 fs = require 'fs'
 
@@ -113,7 +114,7 @@ class EmberCliHelperView extends View
     # must have a file with an extension under /app/*
     return [] if !fileName || fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
 
-    extension = path.extname(fileName)
+    extension = path.extname(fileName).replace('.', '')
 
     # TODO: choose only the last "app" folder
     pathUntilApp = fullPath.split(separator+'app'+separator)[0] + separator + 'app' + separator
@@ -122,79 +123,76 @@ class EmberCliHelperView extends View
 
     [pathUntilApp, pathInApp, fileName, extension]
 
+  generatePossiblePaths: (basePaths, fileName, possibleExtensions) ->
+    baseFileName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName
+    possiblePaths = for ext in possibleExtensions
+      basePaths.concat(["#{baseFileName}.#{ext}"]).join(path.sep)
+
   switchFile: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
     return unless pathUntilApp
 
-    separator = path.sep
-    goodPaths = []
+    possiblePaths = []
 
     # script to template
-    if extension == '.coffee' || extension == '.js'
-      newFileName = fileName.replace(/\.(js|coffee)$/, '.hbs')
-
+    if extension in SCRIPT_EXTENSIONS
       # components/*.js -> templates/components/*.hbs
       if paths[0] == 'components'
-        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+        basePaths = ["templates"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> templates/*.hbs
       # routes/*.js -> templates/*.hbs
       else if paths[0] == 'controllers' || paths[0] == 'routes'
         paths.shift()
-        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+        basePaths = ["templates"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
     # template to script
-    else if extension == '.hbs'
-      newFileNameJs = fileName.replace(/\.hbs$/, '.js')
-      newFileNameCoffee = fileName.replace(/\.hbs$/, '.coffee')
-
+    else if extension in TEMPLATE_EXTENSIONS
       # templates/components/*.hbs -> components/*.js
       if paths[0] == 'templates' && paths[1] == 'components'
         paths.shift()
-        goodPaths.push paths.concat([newFileNameJs]).join(separator)
-        goodPaths.push paths.concat([newFileNameCoffee]).join(separator)
+        possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
 
       # templates/xyz/*.hbz -> controllers/
       else
         paths.shift()
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["controllers"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
-    @openBestMatch(pathUntilApp, goodPaths)
+    @openBestMatch(pathUntilApp, possiblePaths)
 
   switchRoute: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
     return unless pathUntilApp
 
     separator = path.sep
-    goodPaths = []
-
-    newFileNameJs = fileName.replace(/\.(js|coffee|hbs)$/, '.js')
-    newFileNameCoffee = fileName.replace(/\.(js|coffee|hbs)$/, '.coffee')
+    possiblePaths = []
 
     # script to template
-    if extension == '.coffee' || extension == '.js'
+    if extension in SCRIPT_EXTENSIONS
       # routes/*.js -> controllers/*.js
       if paths[0] == 'routes'
         paths.shift()
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["controllers"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> routes/*.js
       else if paths[0] == 'controllers'
         paths.shift()
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["routes"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
     # template to script
-    else if extension == '.hbs'
+    else if extension in TEMPLATE_EXTENSIONS
       # templates/(!components/)*.hbs -> routes/*.js
       if paths[0] == 'templates' && paths[1] != 'components'
         paths.shift()
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["routes"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
-    @openBestMatch(pathUntilApp, goodPaths)
+    @openBestMatch(pathUntilApp, possiblePaths)
 
   switchStyle: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
@@ -243,8 +241,13 @@ class EmberCliHelperView extends View
     componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
 
     if componentName && componentName.indexOf('-') > 0
-      templateName = "templates/components/"+componentName.replace('/', separator)+".hbs"
-      @openBestMatch(pathUntilApp, [templateName])
+      basePaths = ["templates", "components"]
+      fileNameParts = componentName.split("/")
+      fileName = fileNameParts.pop()
+      basePaths = basePaths.concat(fileNameParts)
+      possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+
+      @openBestMatch(pathUntilApp, possiblePaths)
 
 
   openBestMatch: (pathUntilApp, goodPaths) ->

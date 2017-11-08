@@ -3,12 +3,13 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'Ember CLI'
+      'label': 'Ember Helper'
       'submenu': [
         { 'label': 'Toggle Panel',   'command': 'ember-cli-helper:toggle' },
         { 'label': 'Generate Files', 'command': 'ember-cli-helper:generate-file'},
         { 'label': 'Switch between .js/.hbs', 'command': 'ember-cli-helper:switch-file' },
         { 'label': 'Switch between route/controller', 'command': 'ember-cli-helper:switch-route' },
+        { 'label': 'Switch between style files and template/.js', 'command': 'ember-cli-helper:switch-style' },
       ]
     ]
   }

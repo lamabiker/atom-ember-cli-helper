@@ -103,7 +103,6 @@ class EmberCliHelperView extends View
     barHeight = @buttonGroup.height();
     @panel.innerHeight(height - barHeight);
 
-
   getPathComponents: ->
     separator = path.sep
     editor = atom.workspace.getActivePaneItem()
@@ -161,6 +160,13 @@ class EmberCliHelperView extends View
         basePaths = ["controllers"].concat(paths)
         possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
+    # style to script
+    else if extension in STYLE_EXTENSIONS
+      # styles/components/*.sass -> components/*.js
+      if paths[0] == 'styles' && paths[1] == 'components'
+        paths.shift()
+        possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
+
     @openBestMatch(pathUntilApp, possiblePaths)
 
   switchRoute: ->
@@ -202,27 +208,29 @@ class EmberCliHelperView extends View
     possiblePaths = []
 
     # script to style
-    if extension in SCRIPT_EXTENSIONS
+    if extension in SCRIPT_EXTENSIONS && paths[0] == 'components'
       # components/*.js -> styles/components/*.sass
-      if paths[0] == 'components'
-        basePaths = ["styles"].concat(paths)
-        possiblePaths = @generatePossiblePaths(basePaths, fileName, STYLE_EXTENSIONS)
+      basePaths = ["styles"].concat(paths)
+      possiblePaths = @generatePossiblePaths(basePaths, fileName, STYLE_EXTENSIONS)
 
     # template to style
-    else if extension in TEMPLATE_EXTENSIONS
+    else if extension in TEMPLATE_EXTENSIONS && paths[0] == 'templates' && paths[1] == 'components'
       # templates/components/*.hbs -> styles/components/*.sass
-      if paths[0] == 'templates' && paths[1] == 'components'
-        paths.shift()
-        paths.unshift('styles');
-        possiblePaths = @generatePossiblePaths(paths, fileName, STYLE_EXTENSIONS)
+      paths.shift()
+      paths.unshift('styles');
+      possiblePaths = @generatePossiblePaths(paths, fileName, STYLE_EXTENSIONS)
 
     # style to template
-    else if extension in STYLE_EXTENSIONS
+    else if extension in STYLE_EXTENSIONS && paths[0] == 'styles' && paths[1] == 'components'
       # styles/components/*.sass -> templates/components/*.hbs
-      if paths[0] == 'styles' && paths[1] == 'components'
-        paths.shift()
-        paths.unshift('templates')
-        possiblePaths = @generatePossiblePaths(paths, fileName, TEMPLATE_EXTENSIONS)
+      paths.shift()
+      paths.unshift('templates')
+      possiblePaths = @generatePossiblePaths(paths, fileName, TEMPLATE_EXTENSIONS)
+
+    else
+      @warnUser(
+        'no file found',
+        'There are no `style` files associated with this file.')
 
     @openBestMatch(pathUntilApp, possiblePaths)
 
@@ -259,6 +267,25 @@ class EmberCliHelperView extends View
       fs.existsSync(pathUntilApp + pathToTry)
 
     bestPath = legitPaths[0] || goodPaths[0]
+
+    unless legitPaths[0]
+      fileName = bestPath.split('/').pop().split('.')[0] if bestPath
+      if fileName
+        atom.confirm
+          message: 'The target file does\'t exist, would you like to generate it?'
+          detailedMessage: "Atom will generate the #{fileName} component"
+          buttons:
+            'Nah, don\'t do anything': -> null
+            'Yes please, generate it!': => @blueprintNewComponent(fileName)
+            'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
+    else
+      @openOrGenerateFile(bestPath, pathUntilApp);
+
+  blueprintNewComponent: (file) ->
+    if file
+      @runCommand('Generating...', 'generate', "component #{file}")
+
+  openOrGenerateFile: (bestPath, pathUntilApp) ->
     if bestPath
       atom.workspace.open(pathUntilApp + bestPath, { searchAllPanes: true })
 
@@ -269,7 +296,6 @@ class EmberCliHelperView extends View
 
   startTesting: ->
     @runCommand 'Ember CLI Testing Started'.fontcolor("green"), 'test'
-
 
   runCommand: (message, task, params) ->
     if @lastProcess == task
@@ -323,7 +349,7 @@ class EmberCliHelperView extends View
       try
         @generator.show()
       catch e
-        @addLine "Trobule opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
+        @addLine "Trouble opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
         @panel.removeClass 'hidden'
     else
       @addLine "Could not find ember project in #{@getEmberProjectPath()} (ember-cli: #{@getEmberPath()})".fontcolor("red")
@@ -347,6 +373,13 @@ class EmberCliHelperView extends View
     catch e
       @addLine "Error: #{e}"
 
+  warnUser: (message, description) ->
+    notificationOptions =
+      description: description
+      dismissable: true
+      icon: 'circle-slash'
+
+    atom.notifications.addWarning("Ember Helper: #{message}", notificationOptions)
 
   # Borrowed from grunt-runner by @nickclaw
   # https://github.com/nickclaw/atom-grunt-runner

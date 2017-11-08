@@ -1,7 +1,7 @@
 {Task, BufferedProcess} = require 'atom'
 {$, View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
-{TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS} = require './constants'
+{TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLE_EXTENSIONS} = require './constants'
 path = require 'path'
 fs = require 'fs'
 
@@ -199,35 +199,32 @@ class EmberCliHelperView extends View
     return unless pathUntilApp
 
     separator = path.sep
-    goodPaths = []
+    possiblePaths = []
 
-    newFileNameSass = fileName.replace(/\.(js|coffee|hbs)$/, '.sass')
-
-    # style to template
-    if extension == 'sass'
-      newFileName = fileName.replace(/\.(sass)$/, '.hbs')
-
-      # styles/components/*.sass -> templates/components/*.hbs
-      if paths[0] == 'styles' && paths[1] == 'components'
-        paths.shift()
-        goodPaths.push ['templates'].concat(paths).concat([newFileName]).join(separator)
+    # script to style
+    if extension in SCRIPT_EXTENSIONS
+      # components/*.js -> styles/components/*.sass
+      if paths[0] == 'components'
+        basePaths = ["styles"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, STYLE_EXTENSIONS)
 
     # template to style
-    else if extension == 'hbs'
+    else if extension in TEMPLATE_EXTENSIONS
       # templates/components/*.hbs -> styles/components/*.sass
       if paths[0] == 'templates' && paths[1] == 'components'
         paths.shift()
-        paths.unshift('styles')
-        goodPaths.push paths.concat([newFileNameSass]).join(separator)
+        paths.unshift('styles');
+        possiblePaths = @generatePossiblePaths(paths, fileName, STYLE_EXTENSIONS)
 
-    # script to style
-    else if extension == 'js'
-      # components/*.js -> styles/components/*.sass
-      if paths[0] == 'components'
-        paths.unshift('styles')
-        goodPaths.push paths.concat([newFileNameSass]).join(separator)
+    # style to template
+    else if extension in STYLE_EXTENSIONS
+      # styles/components/*.sass -> templates/components/*.hbs
+      if paths[0] == 'styles' && paths[1] == 'components'
+        paths.shift()
+        paths.unshift('templates')
+        possiblePaths = @generatePossiblePaths(paths, fileName, TEMPLATE_EXTENSIONS)
 
-    @openBestMatch(pathUntilApp, goodPaths)
+    @openBestMatch(pathUntilApp, possiblePaths)
 
   openComponent: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()

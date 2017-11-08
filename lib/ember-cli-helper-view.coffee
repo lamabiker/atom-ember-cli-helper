@@ -220,6 +220,13 @@ class EmberCliHelperView extends View
         paths.unshift('styles')
         goodPaths.push paths.concat([newFileNameSass]).join(separator)
 
+    # script to style
+    else if extension == 'js'
+      # components/*.js -> styles/components/*.sass
+      if paths[0] == 'components'
+        paths.unshift('styles')
+        goodPaths.push paths.concat([newFileNameSass]).join(separator)
+
     @openBestMatch(pathUntilApp, goodPaths)
 
   openComponent: ->

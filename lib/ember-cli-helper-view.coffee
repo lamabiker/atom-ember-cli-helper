@@ -27,12 +27,13 @@ class EmberCliHelperView extends View
   initialize: ->
     # Register Commands
     atom.commands.add 'atom-text-editor',
-      "ember-cli-helper:toggle":         => @toggle()
-      "ember-cli-helper:switch-file":    => @switchFile()
-      "ember-cli-helper:switch-route":   => @switchRoute()
-      "ember-cli-helper:switch-style":   => @switchStyle()
-      "ember-cli-helper:open-component": => @openComponent()
-      "ember-cli-helper:generate-file":  => @showGeneratorList()
+      "ember-cli-helper:toggle":              => @toggle()
+      "ember-cli-helper:switch-file":         => @switchFile()
+      "ember-cli-helper:switch-route":        => @switchRoute()
+      "ember-cli-helper:switch-style":        => @switchStyle()
+      "ember-cli-helper:search-references":   => @searchReferences()
+      "ember-cli-helper:open-component":      => @openComponent()
+      "ember-cli-helper:generate-file":       => @showGeneratorList()
 
     # Set up panel resizing
     @on 'mousedown', '.ember-cli-resize-handle', (e) => @resizeStarted(e)
@@ -233,6 +234,39 @@ class EmberCliHelperView extends View
         'There are no `style` files associated with this file.')
 
     @openBestMatch(pathUntilApp, possiblePaths)
+
+  searchReferences: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    if extension in TEMPLATE_EXTENSIONS && paths[0] == 'templates' && paths[1] == 'components'
+      regexp = new RegExp("{{(\#)?#{fileName.split('.')[0]}",'g')
+
+      search = atom.workspace.scan(regexp, { paths: ['*.hbs'] }, @handleSearchResults)
+
+      notificationOptions =
+        description: 'Opening all files where this component is called.'
+        dismissable: true
+        buttons: [
+          text: 'Cancel'
+          onDidClick: -> search.cancel()
+        ]
+        icon: 'circle-slash'
+
+      searchNotif = atom.notifications.addWarning("Ember Helper: Searching...", notificationOptions)
+
+      search.then -> searchNotif.dismiss()
+
+  handleSearchResults: (r) ->
+    line = r.matches[0].range[0][0]
+    column = r.matches[0].range[0][1]
+
+    options =
+      initialLine: line
+      initialColumn: column
+      searchAllPanes: true
+
+    atom.workspace.open(r.filePath, options)
 
   openComponent: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()

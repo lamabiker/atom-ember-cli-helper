@@ -8,9 +8,10 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 'atom-workspace':
-  'ctrl-alt-o': 'ember-cli-helper:toggle'
-  'ctrl-alt-g': 'ember-cli-helper:generate-file'
-  'ctrl-alt-e': 'ember-cli-helper:switch-file'
-  'ctrl-alt-s': 'ember-cli-helper:switch-style'
-  'ctrl-alt-r': 'ember-cli-helper:switch-route'
+  'ctrl-alt-o':     'ember-cli-helper:toggle'
+  'ctrl-alt-g':     'ember-cli-helper:generate-file'
+  'ctrl-alt-e':     'ember-cli-helper:switch-file'
+  'ctrl-alt-s':     'ember-cli-helper:switch-style'
+  'ctrl-alt-a':     'ember-cli-helper:search-references'
+  'ctrl-alt-r':     'ember-cli-helper:switch-route'
   'ctrl-alt-enter': 'ember-cli-helper:open-component'

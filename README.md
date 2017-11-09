@@ -14,6 +14,7 @@ Feel free to open issues if you find something. Pull requests are more than welc
 | :--            | :--                                                                    |
 | ctrl+alt+e     | Toggle between the component/controller and the template               |
 | ctrl+alt+s     | Toggle between the component and the styles/component.sass file        |
+| ctrl+alt+a     | Opens all `.hbs` files where the current component is called           |
 | ctrl+alt+r     | Toggle between the controller and the route                            |
 | ctrl+alt+enter | Jump into templates. Press when cursor over {{forms/super-select ...}} to open templates/components/forms/super-select.hbs |
 

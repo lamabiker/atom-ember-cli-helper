@@ -313,8 +313,8 @@ class EmberCliHelperView extends View
               'Nah, don\'t do anything': -> null
               'Yes please, generate it!': => @blueprintNewComponent(fileName)
               'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
-      else
-        @openOrGenerateFile(bestPath, pathUntilApp);
+    else
+      @openOrGenerateFile(bestPath, pathUntilApp);
 
   blueprintNewComponent: (file) ->
     if file

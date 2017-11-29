@@ -302,18 +302,19 @@ class EmberCliHelperView extends View
 
     bestPath = legitPaths[0] || goodPaths[0]
 
-    unless legitPaths[0]
-      fileName = bestPath.split('/').pop().split('.')[0] if bestPath
-      if fileName
-        atom.confirm
-          message: 'The target file does\'t exist, would you like to generate it?'
-          detailedMessage: "Atom will generate the #{fileName} component"
-          buttons:
-            'Nah, don\'t do anything': -> null
-            'Yes please, generate it!': => @blueprintNewComponent(fileName)
-            'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
-    else
-      @openOrGenerateFile(bestPath, pathUntilApp);
+    if atom.config.get('ember-cli-helper.generateFromBlueprint')
+      unless legitPaths[0]
+        fileName = bestPath.split('/').pop().split('.')[0] if bestPath
+        if fileName
+          atom.confirm
+            message: 'The target file doesn\'t exist, would you like to generate it?'
+            detailedMessage: "Atom will generate the #{fileName} component"
+            buttons:
+              'Nah, don\'t do anything': -> null
+              'Yes please, generate it!': => @blueprintNewComponent(fileName)
+              'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
+      else
+        @openOrGenerateFile(bestPath, pathUntilApp);
 
   blueprintNewComponent: (file) ->
     if file

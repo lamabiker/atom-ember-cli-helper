@@ -303,6 +303,7 @@ class EmberCliHelperView extends View
     bestPath = legitPaths[0] || goodPaths[0]
 
     if atom.config.get('ember-cli-helper.generateFromBlueprint')
+      
       unless legitPaths[0]
         fileName = bestPath.split('/').pop().split('.')[0] if bestPath
         if fileName
@@ -313,6 +314,9 @@ class EmberCliHelperView extends View
               'Nah, don\'t do anything': -> null
               'Yes please, generate it!': => @blueprintNewComponent(fileName)
               'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
+      else
+        @openOrGenerateFile(bestPath, pathUntilApp);
+
     else
       @openOrGenerateFile(bestPath, pathUntilApp);
 

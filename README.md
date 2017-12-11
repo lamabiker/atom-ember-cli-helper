@@ -47,8 +47,9 @@ Known limitation: make sure your ember project is the first project (first in th
 | Path To Ember Executable  | Point the CLI helper to the Ember executable on your computer | `/usr/local/bin/ember` |
 | Path To `node` Executable | Point the CLI helper to the `node` executable on your computer | `/usr/local/bin/node` |
 
-## Todo List
+## Todo List | Pipeline
 
+- [ ] Add a 'cleaner' tool that scans for unused components
 - [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
 - [ ] Use the editor's theme to get colours for success and error in the command output

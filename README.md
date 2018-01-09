@@ -6,8 +6,6 @@
 
 Feel free to open issues if you find something. Pull requests are more than welcome!
 
-![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
-
 ## Keyboard shortcuts
 
 | Keybinding     | Action                                                                 |

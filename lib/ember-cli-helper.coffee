@@ -10,6 +10,15 @@ module.exports =
       type: 'boolean'
       default: true
 
+    generateFromBlueprint:
+      title: 'Enable generating from blueprint'
+      description: """
+        Offer to generate component from blueprint if corresponding
+        file not found
+        """
+      type: 'boolean'
+      default: true
+
     generateCoffeescript:
       title: 'Generate CoffeeScript'
       description: 'Enable to generate CoffeeScript files instead of JavaScript'

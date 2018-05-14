@@ -1,20 +1,18 @@
-As I'm no longer using Atom or Ember, I'm looking for maintainers for this project. See [issue #34](https://github.com/apprentus/atom-ember-cli-helper/issues/34)
-
 # Ember CLI Helper
 
 [![Gitter chat](https://badges.gitter.im/apprentus/atom-ember-cli-helper.png)](https://gitter.im/apprentus/atom-ember-cli-helper)
 
-[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@mariusandra](https://github.com/mariusandra), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development sponsored by [Apprentus](https://www.apprentus.com).
+[ember-cli](https://github.com/stefanpenner/ember-cli) integration in Atom. Currently maintained by [@lamabiker](https://github.com/lamabiker), previously maintained by [@mariusandra](https://github.com/mariusandra), originally created by [@alexlafroscia](https://github.com/alexlafroscia/). Development originally sponsored by [Apprentus](https://www.apprentus.com).
 
 Feel free to open issues if you find something. Pull requests are more than welcome!
-
-![ember cli helper](http://f.cl.ly/items/0C1A110I3w2G2P0k0Z1T/Screen%20Shot%202015-03-22%20at%205.34.37%20PM.png)
 
 ## Keyboard shortcuts
 
 | Keybinding     | Action                                                                 |
 | :--            | :--                                                                    |
 | ctrl+alt+e     | Toggle between the component/controller and the template               |
+| ctrl+alt+s     | Toggle between the component and the styles/component.sass file        |
+| ctrl+alt+a     | Opens all `.hbs` files where the current component is called           |
 | ctrl+alt+r     | Toggle between the controller and the route                            |
 | ctrl+alt+enter | Jump into templates. Press when cursor over {{forms/super-select ...}} to open templates/components/forms/super-select.hbs |
 
@@ -47,11 +45,12 @@ Known limitation: make sure your ember project is the first project (first in th
 | Path To Ember Executable  | Point the CLI helper to the Ember executable on your computer | `/usr/local/bin/ember` |
 | Path To `node` Executable | Point the CLI helper to the `node` executable on your computer | `/usr/local/bin/node` |
 
-## Todo List
+## Todo List | Pipeline
 
+- [ ] Add a 'cleaner' tool that scans for unused components
 - [x] Open `ember-cli-helper` automatically if the package uses the Ember CLI
 - [ ] Differentiate a task's button from the others when it is active
-- [ ] Use the editor's theme to get colors for success and error in the command output
+- [ ] Use the editor's theme to get colours for success and error in the command output
 - [ ] Give some sort of visual feedback about the running command when the panel is minimized
 - [x] Include a panel for running the file generators
 - [x] Add convenience shortcuts to switch between component and template (and route and ...)
@@ -59,16 +58,14 @@ Known limitation: make sure your ember project is the first project (first in th
 
 ## Troubleshooting
 
-Some users have experienced problems running the commands when they openning their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
+Some users have experienced problems running the commands when they opening their project through the `File > Open` menu.  If this happens to you, try opening the project from the command line with the `atom` command see if that fixes the issue.
 
 If the generators button doesn't work, `ember-cli-helper` probably can't find your ember project. Double check all the paths and make sure your ember project is the first opened project.
 
 ***
 
-**Very special thanks** to [@alexlafroscia](https://github.com/alexlafroscia/) for creating the original atom plugin!
+**Very special thanks** to [@alexlafroscia](https://github.com/alexlafroscia/) for creating the original atom plugin and to [@mariusandra](https://github.com/mariusandra) maintaining it!
 
 **Special thanks** to [@nickclaw](https://github.com/nickclaw/) and his
 [atom-grunt-runner](https://github.com/nickclaw/atom-grunt-runner)
 package, which was [@alexlafroscia](https://github.com/alexlafroscia/)'s inspiration for building this and a big help in putting it together.
-
-**Finally a big thank you** to [Apprentus](https://www.apprentus.com) for paying me to work on this! :)

@@ -1,6 +1,7 @@
 {Task, BufferedProcess} = require 'atom'
 {$, View} = require 'atom-space-pen-views'
 GeneratorListView = require './generator-list-view'
+{TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLE_EXTENSIONS} = require './constants'
 path = require 'path'
 fs = require 'fs'
 
@@ -26,11 +27,13 @@ class EmberCliHelperView extends View
   initialize: ->
     # Register Commands
     atom.commands.add 'atom-text-editor',
-      "ember-cli-helper:toggle":         => @toggle()
-      "ember-cli-helper:switch-file":    => @switchFile()
-      "ember-cli-helper:switch-route":   => @switchRoute()
-      "ember-cli-helper:open-component": => @openComponent()
-      "ember-cli-helper:generate-file":  => @showGeneratorList()
+      "ember-cli-helper:toggle":              => @toggle()
+      "ember-cli-helper:switch-file":         => @switchFile()
+      "ember-cli-helper:switch-route":        => @switchRoute()
+      "ember-cli-helper:switch-style":        => @switchStyle()
+      "ember-cli-helper:search-references":   => @searchReferences()
+      "ember-cli-helper:open-component":      => @openComponent()
+      "ember-cli-helper:generate-file":       => @showGeneratorList()
 
     # Set up panel resizing
     @on 'mousedown', '.ember-cli-resize-handle', (e) => @resizeStarted(e)
@@ -102,7 +105,6 @@ class EmberCliHelperView extends View
     barHeight = @buttonGroup.height();
     @panel.innerHeight(height - barHeight);
 
-
   getPathComponents: ->
     separator = path.sep
     editor = atom.workspace.getActivePaneItem()
@@ -113,7 +115,7 @@ class EmberCliHelperView extends View
     # must have a file with an extension under /app/*
     return [] if !fileName || fileName.indexOf('.') == -1 || fullPath.split(separator).indexOf('app') == -1
 
-    extension = path.extname(fileName)
+    extension = path.extname(fileName).replace('.', '')
 
     # TODO: choose only the last "app" folder
     pathUntilApp = fullPath.split(separator+'app'+separator)[0] + separator + 'app' + separator
@@ -122,79 +124,150 @@ class EmberCliHelperView extends View
 
     [pathUntilApp, pathInApp, fileName, extension]
 
+  generatePossiblePaths: (basePaths, fileName, possibleExtensions) ->
+    baseFileName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName
+    possiblePaths = for ext in possibleExtensions
+      basePaths.concat(["#{baseFileName}.#{ext}"]).join(path.sep)
+
   switchFile: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
     return unless pathUntilApp
 
-    separator = path.sep
-    goodPaths = []
+    possiblePaths = []
 
     # script to template
-    if extension == '.coffee' || extension == '.js'
-      newFileName = fileName.replace(/\.(js|coffee)$/, '.hbs')
-
+    if extension in SCRIPT_EXTENSIONS
       # components/*.js -> templates/components/*.hbs
       if paths[0] == 'components'
-        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+        basePaths = ["templates"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> templates/*.hbs
       # routes/*.js -> templates/*.hbs
       else if paths[0] == 'controllers' || paths[0] == 'routes'
         paths.shift()
-        goodPaths.push ["templates"].concat(paths).concat([newFileName]).join(separator)
+        basePaths = ["templates"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
     # template to script
-    else if extension == '.hbs'
-      newFileNameJs = fileName.replace(/\.hbs$/, '.js')
-      newFileNameCoffee = fileName.replace(/\.hbs$/, '.coffee')
-
+    else if extension in TEMPLATE_EXTENSIONS
       # templates/components/*.hbs -> components/*.js
       if paths[0] == 'templates' && paths[1] == 'components'
         paths.shift()
-        goodPaths.push paths.concat([newFileNameJs]).join(separator)
-        goodPaths.push paths.concat([newFileNameCoffee]).join(separator)
+        possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
 
       # templates/xyz/*.hbz -> controllers/
       else
         paths.shift()
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["controllers"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
-    @openBestMatch(pathUntilApp, goodPaths)
+    # style to script
+    else if extension in STYLE_EXTENSIONS
+      # styles/components/*.sass -> components/*.js
+      if paths[0] == 'styles' && paths[1] == 'components'
+        paths.shift()
+        possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
+
+    @openBestMatch(pathUntilApp, possiblePaths)
 
   switchRoute: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
     return unless pathUntilApp
 
     separator = path.sep
-    goodPaths = []
-
-    newFileNameJs = fileName.replace(/\.(js|coffee|hbs)$/, '.js')
-    newFileNameCoffee = fileName.replace(/\.(js|coffee|hbs)$/, '.coffee')
+    possiblePaths = []
 
     # script to template
-    if extension == '.coffee' || extension == '.js'
+    if extension in SCRIPT_EXTENSIONS
       # routes/*.js -> controllers/*.js
       if paths[0] == 'routes'
         paths.shift()
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["controllers"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["controllers"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> routes/*.js
       else if paths[0] == 'controllers'
         paths.shift()
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["routes"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
     # template to script
-    else if extension == '.hbs'
+    else if extension in TEMPLATE_EXTENSIONS
       # templates/(!components/)*.hbs -> routes/*.js
       if paths[0] == 'templates' && paths[1] != 'components'
         paths.shift()
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameJs]).join(separator)
-        goodPaths.push ["routes"].concat(paths).concat([newFileNameCoffee]).join(separator)
+        basePaths = ["routes"].concat(paths)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
-    @openBestMatch(pathUntilApp, goodPaths)
+    @openBestMatch(pathUntilApp, possiblePaths)
+
+  switchStyle: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    separator = path.sep
+    possiblePaths = []
+
+    # script to style
+    if extension in SCRIPT_EXTENSIONS && paths[0] == 'components'
+      # components/*.js -> styles/components/*.sass
+      basePaths = ["styles"].concat(paths)
+      possiblePaths = @generatePossiblePaths(basePaths, fileName, STYLE_EXTENSIONS)
+
+    # template to style
+    else if extension in TEMPLATE_EXTENSIONS && paths[0] == 'templates' && paths[1] == 'components'
+      # templates/components/*.hbs -> styles/components/*.sass
+      paths.shift()
+      paths.unshift('styles');
+      possiblePaths = @generatePossiblePaths(paths, fileName, STYLE_EXTENSIONS)
+
+    # style to template
+    else if extension in STYLE_EXTENSIONS && paths[0] == 'styles' && paths[1] == 'components'
+      # styles/components/*.sass -> templates/components/*.hbs
+      paths.shift()
+      paths.unshift('templates')
+      possiblePaths = @generatePossiblePaths(paths, fileName, TEMPLATE_EXTENSIONS)
+
+    else
+      @warnUser(
+        'no file found',
+        'There are no `style` files associated with this file.')
+
+    @openBestMatch(pathUntilApp, possiblePaths)
+
+  searchReferences: ->
+    [pathUntilApp, paths, fileName, extension] = @getPathComponents()
+    return unless pathUntilApp
+
+    if extension in TEMPLATE_EXTENSIONS && paths[0] == 'templates' && paths[1] == 'components'
+      regexp = new RegExp("{{(\#)?#{fileName.split('.')[0]}",'g')
+
+      search = atom.workspace.scan(regexp, { paths: ['*.hbs'] }, @handleSearchResults)
+
+      notificationOptions =
+        description: 'Opening all files where this component is called.'
+        dismissable: true
+        buttons: [
+          text: 'Cancel'
+          onDidClick: -> search.cancel()
+        ]
+        icon: 'circle-slash'
+
+      searchNotif = atom.notifications.addWarning("Ember Helper: Searching...", notificationOptions)
+
+      search.then -> searchNotif.dismiss()
+
+  handleSearchResults: (r) ->
+    line = r.matches[0].range[0][0]
+    column = r.matches[0].range[0][1]
+
+    options =
+      initialLine: line
+      initialColumn: column
+      searchAllPanes: true
+
+    atom.workspace.open(r.filePath, options)
 
   openComponent: ->
     [pathUntilApp, paths, fileName, extension] = @getPathComponents()
@@ -204,7 +277,7 @@ class EmberCliHelperView extends View
     editor = atom.workspace.getActivePaneItem()
 
     cursor = editor.getCursorBufferPosition()
-    line = editor.buffer.lines[cursor.row]
+    line = editor.buffer.lineForRow(cursor.row)
 
     startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
     return if startColumn == -1
@@ -215,8 +288,13 @@ class EmberCliHelperView extends View
     componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
 
     if componentName && componentName.indexOf('-') > 0
-      templateName = "templates/components/"+componentName.replace('/', separator)+".hbs"
-      @openBestMatch(pathUntilApp, [templateName])
+      basePaths = ["templates", "components"]
+      fileNameParts = componentName.split("/")
+      fileName = fileNameParts.pop()
+      basePaths = basePaths.concat(fileNameParts)
+      possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+
+      @openBestMatch(pathUntilApp, possiblePaths)
 
 
   openBestMatch: (pathUntilApp, goodPaths) ->
@@ -224,6 +302,30 @@ class EmberCliHelperView extends View
       fs.existsSync(pathUntilApp + pathToTry)
 
     bestPath = legitPaths[0] || goodPaths[0]
+
+    if atom.config.get('ember-cli-helper.generateFromBlueprint')
+      
+      unless legitPaths[0]
+        fileName = bestPath.split('/').pop().split('.')[0] if bestPath
+        if fileName
+          atom.confirm
+            message: 'The target file doesn\'t exist, would you like to generate it?'
+            detailedMessage: "Atom will generate the #{fileName} component"
+            buttons:
+              'Nah, don\'t do anything': -> null
+              'Yes please, generate it!': => @blueprintNewComponent(fileName)
+              'No thanks, just open single file': => @openOrGenerateFile(bestPath, pathUntilApp)
+      else
+        @openOrGenerateFile(bestPath, pathUntilApp);
+
+    else
+      @openOrGenerateFile(bestPath, pathUntilApp);
+
+  blueprintNewComponent: (file) ->
+    if file
+      @runCommand('Generating...', 'generate', "component #{file}")
+
+  openOrGenerateFile: (bestPath, pathUntilApp) ->
     if bestPath
       atom.workspace.open(pathUntilApp + bestPath, { searchAllPanes: true })
 
@@ -234,7 +336,6 @@ class EmberCliHelperView extends View
 
   startTesting: ->
     @runCommand 'Ember CLI Testing Started'.fontcolor("green"), 'test'
-
 
   runCommand: (message, task, params) ->
     if @lastProcess == task
@@ -288,7 +389,7 @@ class EmberCliHelperView extends View
       try
         @generator.show()
       catch e
-        @addLine "Trobule opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
+        @addLine "Trouble opening the generator list. Make sure your project (#{@getEmberProjectPath()}) and ember-cli (#{@getEmberPath()}) are properly configured".fontcolor("red")
         @panel.removeClass 'hidden'
     else
       @addLine "Could not find ember project in #{@getEmberProjectPath()} (ember-cli: #{@getEmberPath()})".fontcolor("red")
@@ -312,6 +413,13 @@ class EmberCliHelperView extends View
     catch e
       @addLine "Error: #{e}"
 
+  warnUser: (message, description) ->
+    notificationOptions =
+      description: description
+      dismissable: true
+      icon: 'circle-slash'
+
+    atom.notifications.addWarning("Ember Helper: #{message}", notificationOptions)
 
   # Borrowed from grunt-runner by @nickclaw
   # https://github.com/nickclaw/atom-grunt-runner

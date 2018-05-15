@@ -6,7 +6,7 @@ module.exports =
   config:
     enableHelper:
       title: 'Enable Helper'
-      description: 'Enable console and helper buttons'
+      description: 'Enable console and helper buttons on startup'
       type: 'boolean'
       default: true
 

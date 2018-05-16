@@ -25,8 +25,8 @@
     }
   ],
   "main": "./lib/ember-cli-helper",
-  "version": "0.18.0",
-  "repository": "lamabiker/atom-ember-cli-helper",
+  "version": "0.17.1",
+  "repository": "https://github.com/lamabiker/atom-ember-cli-helper",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"

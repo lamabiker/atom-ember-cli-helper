@@ -44,19 +44,20 @@ class EmberCliHelperView extends View
     process.env.PATH += ":#{nodePath}"
 
     # Enable or disable the helper
-    try
-      ember = require("#{@getEmberProjectPath()}/package.json").devDependencies["ember-cli"]
-    catch e
-      error = e.code
+    if atom.config.get('ember-cli-helper.enableHelper')
+      try
+        ember =
+          require("#{@getEmberProjectPath()}/package.json").devDependencies["ember-cli"]
+      catch e
+        error = e.code
 
-    if ember?
-      @generator = new GeneratorListView @
-      @toggle()
-    else
-      @emberProject = false
-      @addLine "This is not an Ember CLI projet in #{@getEmberProjectPath()}"
-      @panel.removeClass 'hidden'
-
+      if ember?
+        @generator = new GeneratorListView @
+        @toggle()
+      else
+        @emberProject = false
+        @addLine "This is not an Ember CLI projet in #{@getEmberProjectPath()}"
+        @panel.removeClass 'hidden'
 
   getEmberProjectPath: ->
     atom.project.getPaths()[0] + atom.config.get('ember-cli-helper.emberProjectPath')

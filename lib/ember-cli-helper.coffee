@@ -4,6 +4,12 @@ module.exports =
   emberCliHelperView: null
 
   config:
+    enableHelper:
+      title: 'Enable Helper'
+      description: 'Enable console and helper buttons on startup'
+      type: 'boolean'
+      default: true
+
     generateFromBlueprint:
       title: 'Enable generating from blueprint'
       description: """
@@ -12,7 +18,7 @@ module.exports =
         """
       type: 'boolean'
       default: true
-      
+
     generateCoffeescript:
       title: 'Generate CoffeeScript'
       description: 'Enable to generate CoffeeScript files instead of JavaScript'

@@ -184,13 +184,13 @@ class EmberCliHelperView extends View
       if paths[0] == 'routes'
         paths.shift()
         basePaths = ["controllers"].concat(paths)
-        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
       # controllers/*.js -> routes/*.js
       else if paths[0] == 'controllers'
         paths.shift()
         basePaths = ["routes"].concat(paths)
-        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
     # template to script
     else if extension in TEMPLATE_EXTENSIONS

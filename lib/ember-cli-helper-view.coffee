@@ -1,5 +1,6 @@
 {Task, BufferedProcess} = require 'atom'
 {$, View} = require 'atom-space-pen-views'
+{dasherize} = require 'ember-cli-string-utils'
 GeneratorListView = require './generator-list-view'
 {TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLE_EXTENSIONS} = require './constants'
 path = require 'path'
@@ -279,13 +280,17 @@ class EmberCliHelperView extends View
     cursor = editor.getCursorBufferPosition()
     line = editor.buffer.lineForRow(cursor.row)
 
-    startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
-    return if startColumn == -1
-
-    line = line.substring(startColumn + 2)
-    line = line.substring(1) if line.indexOf('#') == 0
-
-    componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
+    abStartColumn = line.substring(0, cursor.column).lastIndexOf('<')
+    mStartColumn = line.substring(0, cursor.column).lastIndexOf('{{')
+    if abStartColumn >= 0 # Angle brackets invocation
+      abComponentName = line.match(/(?<=)[A-Z][A-Za-z:]*/)[0]
+      componentName = abComponentName.split('::').map(dasherize).join('/')
+    else if mStartColumn >= 0 # Mustache invocation
+      line = line.substring(startColumn + 2)
+      line = line.substring(1) if line.indexOf('#') == 0
+      componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
+    else
+      return
 
     if componentName && componentName.indexOf('-') > 0
       basePaths = ["templates", "components"]

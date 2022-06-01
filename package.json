@@ -32,6 +32,7 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.4"
+    "atom-space-pen-views": "^2.0.4",
+    "ember-cli-string-utils": "^1.1.0"
   }
 }

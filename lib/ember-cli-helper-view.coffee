@@ -140,7 +140,8 @@ class EmberCliHelperView extends View
     if extension in SCRIPT_EXTENSIONS
       # components/*.js -> templates/components/*.hbs
       if paths[0] == 'components'
-        basePaths = ["templates"].concat(paths)
+        # basePaths = ["templates"].concat(paths) # pre-octane
+        basePaths = paths # octane
         possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> templates/*.hbs
@@ -153,8 +154,9 @@ class EmberCliHelperView extends View
     # template to script
     else if extension in TEMPLATE_EXTENSIONS
       # templates/components/*.hbs -> components/*.js
-      if paths[0] == 'templates' && paths[1] == 'components'
-        paths.shift()
+      # if paths[0] == 'templates' && paths[1] == 'components' # pre-octane
+      if paths[0] == 'components' # octane
+        # paths.shift() # pre-octane
         possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
 
       # templates/xyz/*.hbz -> controllers/
@@ -292,8 +294,9 @@ class EmberCliHelperView extends View
     else
       return
 
-    if componentName && componentName.indexOf('-') > 0
-      basePaths = ["templates", "components"]
+    if componentName
+      # basePaths = ["templates", "components"] # pre-octane
+      basePaths = ["components"] # octane
       fileNameParts = componentName.split("/")
       fileName = fileNameParts.pop()
       basePaths = basePaths.concat(fileNameParts)

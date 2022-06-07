@@ -1,5 +1,6 @@
 {Task, BufferedProcess} = require 'atom'
 {$, View} = require 'atom-space-pen-views'
+{dasherize} = require 'ember-cli-string-utils'
 GeneratorListView = require './generator-list-view'
 {TEMPLATE_EXTENSIONS, SCRIPT_EXTENSIONS, STYLE_EXTENSIONS} = require './constants'
 path = require 'path'
@@ -139,7 +140,8 @@ class EmberCliHelperView extends View
     if extension in SCRIPT_EXTENSIONS
       # components/*.js -> templates/components/*.hbs
       if paths[0] == 'components'
-        basePaths = ["templates"].concat(paths)
+        # basePaths = ["templates"].concat(paths) # pre-octane
+        basePaths = paths # octane
         possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
 
       # controllers/*.js -> templates/*.hbs
@@ -152,8 +154,9 @@ class EmberCliHelperView extends View
     # template to script
     else if extension in TEMPLATE_EXTENSIONS
       # templates/components/*.hbs -> components/*.js
-      if paths[0] == 'templates' && paths[1] == 'components'
-        paths.shift()
+      # if paths[0] == 'templates' && paths[1] == 'components' # pre-octane
+      if paths[0] == 'components' # octane
+        # paths.shift() # pre-octane
         possiblePaths = @generatePossiblePaths(paths, fileName, SCRIPT_EXTENSIONS)
 
       # templates/xyz/*.hbz -> controllers/
@@ -184,13 +187,13 @@ class EmberCliHelperView extends View
       if paths[0] == 'routes'
         paths.shift()
         basePaths = ["controllers"].concat(paths)
-        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
       # controllers/*.js -> routes/*.js
       else if paths[0] == 'controllers'
         paths.shift()
         basePaths = ["routes"].concat(paths)
-        possiblePaths = @generatePossiblePaths(basePaths, fileName, TEMPLATE_EXTENSIONS)
+        possiblePaths = @generatePossiblePaths(basePaths, fileName, SCRIPT_EXTENSIONS)
 
     # template to script
     else if extension in TEMPLATE_EXTENSIONS
@@ -279,16 +282,21 @@ class EmberCliHelperView extends View
     cursor = editor.getCursorBufferPosition()
     line = editor.buffer.lineForRow(cursor.row)
 
-    startColumn = line.substring(0, cursor.column).lastIndexOf('{{')
-    return if startColumn == -1
+    abStartColumn = line.substring(0, cursor.column).lastIndexOf('<')
+    mStartColumn = line.substring(0, cursor.column).lastIndexOf('{{')
+    if abStartColumn >= 0 # Angle brackets invocation
+      abComponentName = line.match(/(?<=)[A-Z][A-Za-z:]*/)[0]
+      componentName = abComponentName.split('::').map(dasherize).join('/')
+    else if mStartColumn >= 0 # Mustache invocation
+      line = line.substring(startColumn + 2)
+      line = line.substring(1) if line.indexOf('#') == 0
+      componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
+    else
+      return
 
-    line = line.substring(startColumn + 2)
-    line = line.substring(1) if line.indexOf('#') == 0
-
-    componentName = line.split(/[^A-Za-z0-9\/\-_]/)[0]
-
-    if componentName && componentName.indexOf('-') > 0
-      basePaths = ["templates", "components"]
+    if componentName
+      # basePaths = ["templates", "components"] # pre-octane
+      basePaths = ["components"] # octane
       fileNameParts = componentName.split("/")
       fileName = fileNameParts.pop()
       basePaths = basePaths.concat(fileNameParts)
